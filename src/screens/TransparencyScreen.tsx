@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Card } from '../components/Card';
 import { Colors, Spacing, Radius, Shadow } from '../theme';
 import { transparencyData } from '../data/mock';
 
@@ -26,19 +24,18 @@ export function TransparencyScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <LinearGradient
-          colors={['#0D2137', '#1A3A5C', Colors.tealDark]}
-          start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-          style={styles.header}
-        >
-          <Text style={styles.headerTitle}>📊 Transparência</Text>
+
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.headerLabel}>PRESTAÇÃO DE CONTAS</Text>
+          <Text style={styles.headerTitle}>Transparência</Text>
           <Text style={styles.headerSub}>Veja como cada real é investido</Text>
-        </LinearGradient>
+        </View>
 
         <View style={styles.body}>
           {/* Big stats */}
           <View style={styles.bigCard}>
-            <Text style={styles.period}>📅 Resumo · {d.period}</Text>
+            <Text style={styles.period}>RESUMO · {d.period}</Text>
             <View style={styles.bigGrid}>
               <View style={styles.bigItem}>
                 <Text style={styles.bigN}>{d.totalRaised}</Text>
@@ -56,21 +53,23 @@ export function TransparencyScreen() {
           </View>
 
           {/* Monthly chart */}
-          <Card heading="💰 Arrecadação mensal (2026)">
+          <View style={styles.card}>
+            <Text style={styles.cardHeading}>ARRECADAÇÃO MENSAL (2026)</Text>
             {d.monthly.map(item => (
               <BarItem key={item.label} label={item.label} value={item.value} pct={item.pct} color={Colors.teal} />
             ))}
-          </Card>
+          </View>
 
           {/* Allocation chart */}
-          <Card heading="🏗️ Destino dos recursos">
+          <View style={styles.card}>
+            <Text style={styles.cardHeading}>DESTINO DOS RECURSOS</Text>
             {d.allocation.map(item => (
               <BarItem key={item.label} label={item.label} value={item.value} pct={item.pct} color={item.color} />
             ))}
-          </Card>
+          </View>
 
           <TouchableOpacity style={styles.downloadBtn}>
-            <Text style={styles.downloadText}>📄 Baixar relatório completo (PDF)</Text>
+            <Text style={styles.downloadText}>Baixar relatório completo (PDF)</Text>
           </TouchableOpacity>
 
           <View style={{ height: 24 }} />
@@ -81,18 +80,28 @@ export function TransparencyScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#0D2137' },
-  header: { padding: Spacing.xl, paddingTop: Spacing.xxl, paddingBottom: 36 },
-  headerTitle: { fontSize: 22, fontWeight: '800', color: Colors.white, marginBottom: 3 },
-  headerSub: { fontSize: 13, color: 'rgba(255,255,255,0.78)' },
-  body: { backgroundColor: Colors.cream, padding: Spacing.md, marginTop: -24 },
+  safe: { flex: 1, backgroundColor: Colors.white },
+  header: {
+    backgroundColor: Colors.white,
+    padding: Spacing.xl,
+    paddingTop: 28,
+    paddingBottom: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+  },
+  headerLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, color: Colors.teal, marginBottom: 8 },
+  headerTitle: { fontSize: 28, fontWeight: '800', color: Colors.text, letterSpacing: -0.5, marginBottom: 4 },
+  headerSub: { fontSize: 13, color: Colors.text3, lineHeight: 20 },
+  body: { backgroundColor: Colors.cream, padding: Spacing.md },
   bigCard: { backgroundColor: Colors.white, borderRadius: Radius.lg, padding: Spacing.xl, marginBottom: Spacing.md, ...Shadow.md },
-  period: { fontSize: 11, fontWeight: '700', color: Colors.text3, textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: Spacing.md },
+  period: { fontSize: 10, fontWeight: '700', color: Colors.text3, letterSpacing: 0.7, marginBottom: Spacing.md },
   bigGrid: { flexDirection: 'row' },
   bigItem: { flex: 1, alignItems: 'center', paddingVertical: 14, paddingHorizontal: 6 },
   bigItemMid: { borderLeftWidth: 1, borderRightWidth: 1, borderColor: Colors.border },
   bigN: { fontSize: 20, fontWeight: '800', color: Colors.teal, lineHeight: 24 },
   bigL: { fontSize: 10, color: Colors.text3, marginTop: 5, textAlign: 'center', lineHeight: 14 },
+  card: { backgroundColor: Colors.white, borderRadius: Radius.lg, padding: Spacing.xl, marginBottom: Spacing.md, ...Shadow.sm },
+  cardHeading: { fontSize: 10, fontWeight: '700', color: Colors.text3, letterSpacing: 0.7, marginBottom: Spacing.md },
   barItem: { marginBottom: 14 },
   barLabelRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5 },
   barLabel: { fontSize: 12, color: Colors.text2, fontWeight: '500' },
@@ -100,5 +109,5 @@ const styles = StyleSheet.create({
   barTrack: { height: 8, backgroundColor: Colors.border, borderRadius: Radius.full, overflow: 'hidden' },
   barFill: { height: '100%', borderRadius: Radius.full },
   downloadBtn: { backgroundColor: Colors.white, borderRadius: Radius.md, paddingVertical: 15, alignItems: 'center', borderWidth: 1.5, borderColor: Colors.border, ...Shadow.sm },
-  downloadText: { fontSize: 14, fontWeight: '700', color: Colors.teal },
+  downloadText: { fontSize: 13, fontWeight: '700', color: Colors.teal, letterSpacing: 0.2 },
 });

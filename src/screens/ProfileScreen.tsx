@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Card } from '../components/Card';
 import { Colors, Spacing, Radius, Shadow } from '../theme';
 import { donationHistory } from '../data/mock';
 import { useAuth } from '../context/AuthContext';
@@ -26,7 +24,6 @@ export function ProfileScreen() {
     );
   }
 
-  // Iniciais do avatar
   const initials = displayName
     .split(' ')
     .slice(0, 2)
@@ -37,15 +34,11 @@ export function ProfileScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false}>
+
         {/* Header */}
-        <LinearGradient
-          colors={[Colors.tealDark, Colors.teal, '#28A99C']}
-          start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-          style={styles.header}
-        >
-          {/* Botão logout */}
+        <View style={styles.header}>
           <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
-            <Text style={styles.logoutText}>Sair</Text>
+            <Text style={styles.logoutBtnText}>Sair</Text>
           </TouchableOpacity>
 
           <View style={styles.avatar}>
@@ -54,29 +47,30 @@ export function ProfileScreen() {
           <Text style={styles.profileName}>{displayName}</Text>
           <Text style={styles.profileEmail}>{user?.email}</Text>
           <Text style={styles.profileSince}>Parceiro desde {partnerSince}</Text>
+
           <View style={styles.badgesRow}>
-            {['🏠 Parceiro', '💛 Recorrente'].map(b => (
-              <View key={b} style={styles.badge}><Text style={styles.badgeText}>{b}</Text></View>
+            {['Parceiro', 'Recorrente'].map(b => (
+              <View key={b} style={styles.badge}>
+                <Text style={styles.badgeText}>{b}</Text>
+              </View>
             ))}
           </View>
-        </LinearGradient>
+        </View>
 
         <View style={styles.body}>
+
           {/* Impact banner */}
-          <LinearGradient
-            colors={[Colors.terraDark, Colors.terra, Colors.terraLight]}
-            start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-            style={styles.impactBanner}
-          >
+          <View style={styles.impactBanner}>
+            <Text style={styles.impactLabel}>IMPACTO GERADO</Text>
             <Text style={styles.impactBig}>{housesHelped}</Text>
-            <Text style={styles.impactLabel}>
+            <Text style={styles.impactSub}>
               {housesHelped === 1 ? 'casa ajudada a construir' : 'casas ajudadas a construir'}
             </Text>
-            <Text style={styles.impactSub}>Você faz parte dessa história 💛</Text>
-          </LinearGradient>
+          </View>
 
           {/* Stats */}
-          <Card heading="📊 Seu impacto pessoal">
+          <View style={styles.card}>
+            <Text style={styles.cardHeading}>SEU IMPACTO PESSOAL</Text>
             <View style={styles.statsRow}>
               <View style={styles.statBox}>
                 <Text style={styles.statN}>R${'\n'}{totalDonated.toLocaleString('pt-BR')}</Text>
@@ -91,16 +85,19 @@ export function ProfileScreen() {
                 <Text style={styles.statL}>Eventos participados</Text>
               </View>
             </View>
-          </Card>
+          </View>
 
           {/* History */}
-          <Card heading="📋 Histórico de doações">
+          <View style={styles.card}>
+            <Text style={styles.cardHeading}>HISTÓRICO DE DOAÇÕES</Text>
             {donationHistory.length === 0 ? (
               <Text style={styles.emptyText}>Nenhuma doação registrada ainda.</Text>
             ) : (
               donationHistory.map(item => (
                 <View key={item.id} style={styles.historyItem}>
-                  <View style={styles.historyDot}><Text style={{ fontSize: 17 }}>{item.emoji}</Text></View>
+                  <View style={styles.historyDot}>
+                    <Text style={styles.historyDotText}>{item.label.charAt(0)}</Text>
+                  </View>
                   <View style={styles.historyInfo}>
                     <Text style={styles.historyLbl}>{item.label}</Text>
                     <Text style={styles.historyDate}>{item.date} · {item.method}</Text>
@@ -112,11 +109,11 @@ export function ProfileScreen() {
             <TouchableOpacity style={styles.historyMore}>
               <Text style={styles.historyMoreText}>Ver histórico completo →</Text>
             </TouchableOpacity>
-          </Card>
+          </View>
 
-          {/* Logout secundário */}
+          {/* Logout */}
           <TouchableOpacity style={styles.logoutCard} onPress={handleLogout}>
-            <Text style={styles.logoutCardText}>🚪 Sair da conta</Text>
+            <Text style={styles.logoutCardText}>Sair da conta</Text>
           </TouchableOpacity>
 
           <View style={{ height: 16 }} />
@@ -127,29 +124,72 @@ export function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: Colors.tealDark },
-  header: { padding: Spacing.xl, paddingBottom: 44, alignItems: 'center', position: 'relative' },
-  logoutBtn: { position: 'absolute', top: Spacing.lg, right: Spacing.xl, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: Radius.full, paddingHorizontal: 14, paddingVertical: 6, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' },
-  logoutText: { fontSize: 12, fontWeight: '600', color: Colors.white },
-  avatar: { width: 74, height: 74, borderRadius: 37, backgroundColor: 'rgba(255,255,255,0.25)', borderWidth: 3, borderColor: 'rgba(255,255,255,0.45)', alignItems: 'center', justifyContent: 'center', marginBottom: Spacing.md },
-  avatarText: { fontSize: 28, fontWeight: '800', color: Colors.white },
+  safe: { flex: 1, backgroundColor: Colors.white },
+  header: {
+    backgroundColor: Colors.teal,
+    padding: Spacing.xl,
+    paddingTop: 28,
+    paddingBottom: 44,
+    alignItems: 'center',
+  },
+  logoutBtn: {
+    position: 'absolute',
+    top: Spacing.lg,
+    right: Spacing.xl,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: Radius.full,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.25)',
+  },
+  logoutBtnText: { fontSize: 12, fontWeight: '600', color: Colors.white },
+  avatar: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.4)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: Spacing.md,
+  },
+  avatarText: { fontSize: 26, fontWeight: '800', color: Colors.white },
   profileName: { fontSize: 20, fontWeight: '800', color: Colors.white },
   profileEmail: { fontSize: 12, color: 'rgba(255,255,255,0.65)', marginTop: 2 },
   profileSince: { fontSize: 12, color: 'rgba(255,255,255,0.75)', marginTop: 4 },
   badgesRow: { flexDirection: 'row', gap: 8, marginTop: Spacing.md },
-  badge: { backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: Radius.full, paddingHorizontal: 14, paddingVertical: 6, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' },
-  badgeText: { fontSize: 12, fontWeight: '600', color: Colors.white },
-  body: { backgroundColor: Colors.cream, padding: Spacing.md, marginTop: -28 },
-  impactBanner: { borderRadius: Radius.lg, padding: Spacing.xl, alignItems: 'center', marginBottom: Spacing.md, ...Shadow.md },
+  badge: {
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: Radius.full,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.25)',
+  },
+  badgeText: { fontSize: 11, fontWeight: '600', color: Colors.white, letterSpacing: 0.3 },
+  body: { backgroundColor: Colors.cream, padding: Spacing.md, marginTop: -20 },
+  impactBanner: {
+    backgroundColor: Colors.terra,
+    borderRadius: Radius.lg,
+    padding: Spacing.xl,
+    alignItems: 'center',
+    marginBottom: Spacing.md,
+    ...Shadow.md,
+  },
+  impactLabel: { fontSize: 10, fontWeight: '700', color: 'rgba(255,255,255,0.7)', letterSpacing: 1, marginBottom: 8 },
   impactBig: { fontSize: 44, fontWeight: '800', color: Colors.white, lineHeight: 48 },
-  impactLabel: { fontSize: 14, color: Colors.white, opacity: 0.9, marginTop: 6, fontWeight: '500' },
-  impactSub: { fontSize: 12, color: Colors.white, opacity: 0.75, marginTop: 6 },
+  impactSub: { fontSize: 13, color: 'rgba(255,255,255,0.85)', marginTop: 6, fontWeight: '500' },
+  card: { backgroundColor: Colors.white, borderRadius: Radius.lg, padding: Spacing.xl, marginBottom: Spacing.md, ...Shadow.sm },
+  cardHeading: { fontSize: 10, fontWeight: '700', color: Colors.text3, letterSpacing: 0.7, marginBottom: Spacing.md },
   statsRow: { flexDirection: 'row', gap: Spacing.sm },
   statBox: { flex: 1, backgroundColor: Colors.cream, borderRadius: Radius.sm, padding: Spacing.md, alignItems: 'center' },
   statN: { fontSize: 16, fontWeight: '800', color: Colors.teal, textAlign: 'center', lineHeight: 22 },
   statL: { fontSize: 10, color: Colors.text3, marginTop: 4, textAlign: 'center', lineHeight: 14 },
   historyItem: { flexDirection: 'row', alignItems: 'center', gap: Spacing.md, paddingVertical: 13, borderBottomWidth: 1, borderBottomColor: Colors.border },
-  historyDot: { width: 38, height: 38, borderRadius: 19, backgroundColor: Colors.tealBg, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  historyDot: { width: 36, height: 36, borderRadius: 18, backgroundColor: Colors.tealBg, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  historyDotText: { fontSize: 13, fontWeight: '800', color: Colors.teal },
   historyInfo: { flex: 1 },
   historyLbl: { fontSize: 14, fontWeight: '600', color: Colors.text },
   historyDate: { fontSize: 11, color: Colors.text3, marginTop: 2 },
@@ -157,6 +197,6 @@ const styles = StyleSheet.create({
   historyMore: { alignItems: 'center', paddingTop: Spacing.md },
   historyMoreText: { fontSize: 13, fontWeight: '700', color: Colors.teal },
   emptyText: { fontSize: 14, color: Colors.text3, textAlign: 'center', paddingVertical: Spacing.lg },
-  logoutCard: { backgroundColor: Colors.white, borderRadius: Radius.lg, padding: Spacing.lg, alignItems: 'center', marginBottom: Spacing.md, ...Shadow.sm },
+  logoutCard: { backgroundColor: Colors.white, borderRadius: Radius.lg, padding: Spacing.lg, alignItems: 'center', marginBottom: Spacing.md, borderWidth: 1.5, borderColor: Colors.border },
   logoutCardText: { fontSize: 14, fontWeight: '600', color: '#C62828' },
 });

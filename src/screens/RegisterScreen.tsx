@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
-  KeyboardAvoidingView, Platform, ScrollView, Alert, ActivityIndicator,
+  KeyboardAvoidingView, Platform, ScrollView, Alert, ActivityIndicator, Image,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
-import { Colors, Spacing, Radius } from '../theme';
+import { Colors, Spacing, Radius, Shadow } from '../theme';
 
-interface Props {
-  onGoToLogin: () => void;
-}
+interface Props { onGoToLogin: () => void }
 
 export function RegisterScreen({ onGoToLogin }: Props) {
   const { signUp } = useAuth();
@@ -23,95 +20,64 @@ export function RegisterScreen({ onGoToLogin }: Props) {
   const [showPass, setShowPass] = useState(false);
 
   async function handleRegister() {
-    if (!name || !email || !password || !confirm) {
-      Alert.alert('Atenção', 'Preencha todos os campos obrigatórios.');
-      return;
-    }
-    if (password.length < 6) {
-      Alert.alert('Atenção', 'A senha deve ter pelo menos 6 caracteres.');
-      return;
-    }
-    if (password !== confirm) {
-      Alert.alert('Atenção', 'As senhas não coincidem.');
-      return;
-    }
-
+    if (!name || !email || !password || !confirm) { Alert.alert('Atenção', 'Preencha todos os campos obrigatórios.'); return; }
+    if (password.length < 6) { Alert.alert('Atenção', 'A senha deve ter pelo menos 6 caracteres.'); return; }
+    if (password !== confirm) { Alert.alert('Atenção', 'As senhas não coincidem.'); return; }
     setLoading(true);
     try {
       await signUp(name.trim(), email.trim(), password, whatsapp.trim());
     } catch (e: any) {
       const msgs: Record<string, string> = {
-        'auth/email-already-in-use': 'Este e-mail já está cadastrado. Tente entrar.',
+        'auth/email-already-in-use': 'Este e-mail já está cadastrado.',
         'auth/invalid-email': 'E-mail inválido.',
-        'auth/weak-password': 'Senha muito fraca. Use pelo menos 6 caracteres.',
-        'auth/network-request-failed': 'Sem conexão com a internet.',
+        'auth/weak-password': 'Senha muito fraca.',
       };
-      Alert.alert('Erro', msgs[e.code] ?? 'Erro ao criar conta. Tente novamente.');
-    } finally {
-      setLoading(false);
-    }
+      Alert.alert('Erro', msgs[e.code] ?? 'Erro ao criar conta.');
+    } finally { setLoading(false); }
   }
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <ScrollView
-          contentContainerStyle={styles.scroll}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Header */}
-          <LinearGradient
-            colors={[Colors.terraDark, Colors.terra, Colors.terraLight]}
-            start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-            style={styles.header}
-          >
-            <Text style={styles.headerIcon}>💛</Text>
-            <Text style={styles.headerTitle}>Torne-se um parceiro</Text>
-            <Text style={styles.headerSub}>Junte-se a 183 parceiros que já{'\n'}estão transformando vidas</Text>
-          </LinearGradient>
+        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+
+          {/* Logo area */}
+          <View style={styles.logoArea}>
+            <Image source={require('../../assets/logo-terra.jpg')} style={styles.logo} resizeMode="contain" />
+            <View style={styles.partnersBadge}>
+              <Text style={styles.partnersText}>183 parceiros já constroem junto</Text>
+            </View>
+          </View>
 
           {/* Form */}
           <View style={styles.form}>
             <Text style={styles.title}>Criar conta</Text>
             <Text style={styles.subtitle}>Preencha seus dados para começar</Text>
 
-            <Text style={styles.label}>Nome completo *</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Seu nome"
-              placeholderTextColor={Colors.text3}
-              autoCapitalize="words"
-              value={name}
-              onChangeText={setName}
-            />
-
-            <Text style={styles.label}>E-mail *</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="seu@email.com"
-              placeholderTextColor={Colors.text3}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              value={email}
-              onChangeText={setEmail}
-            />
-
-            <Text style={styles.label}>WhatsApp</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="(61) 99999-9999"
-              placeholderTextColor={Colors.text3}
-              keyboardType="phone-pad"
-              value={whatsapp}
-              onChangeText={setWhatsapp}
-            />
+            {[
+              { label: 'Nome completo *', placeholder: 'Seu nome', value: name, setter: setName, type: 'default' as const, cap: 'words' as const },
+              { label: 'E-mail *', placeholder: 'seu@email.com', value: email, setter: setEmail, type: 'email-address' as const, cap: 'none' as const },
+              { label: 'WhatsApp', placeholder: '(61) 99999-9999', value: whatsapp, setter: setWhatsapp, type: 'phone-pad' as const, cap: 'none' as const },
+            ].map(f => (
+              <View key={f.label}>
+                <Text style={styles.label}>{f.label}</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder={f.placeholder}
+                  placeholderTextColor={Colors.text3}
+                  keyboardType={f.type}
+                  autoCapitalize={f.cap}
+                  autoCorrect={false}
+                  value={f.value}
+                  onChangeText={f.setter}
+                />
+              </View>
+            ))}
 
             <Text style={styles.label}>Senha * <Text style={styles.labelHint}>(mín. 6 caracteres)</Text></Text>
-            <View style={styles.passWrap}>
+            <View style={styles.passRow}>
               <TextInput
-                style={[styles.input, { flex: 1, marginBottom: 0, borderRightWidth: 0, borderTopRightRadius: 0, borderBottomRightRadius: 0 }]}
+                style={[styles.input, styles.inputPass]}
                 placeholder="••••••••"
                 placeholderTextColor={Colors.text3}
                 secureTextEntry={!showPass}
@@ -119,11 +85,11 @@ export function RegisterScreen({ onGoToLogin }: Props) {
                 onChangeText={setPassword}
               />
               <TouchableOpacity style={styles.eyeBtn} onPress={() => setShowPass(v => !v)}>
-                <Text style={{ fontSize: 18 }}>{showPass ? '🙈' : '👁️'}</Text>
+                <Text style={styles.eyeText}>{showPass ? 'ocultar' : 'ver'}</Text>
               </TouchableOpacity>
             </View>
 
-            <Text style={[styles.label, { marginTop: Spacing.lg }]}>Confirmar senha *</Text>
+            <Text style={styles.label}>Confirmar senha *</Text>
             <TextInput
               style={styles.input}
               placeholder="••••••••"
@@ -134,27 +100,17 @@ export function RegisterScreen({ onGoToLogin }: Props) {
             />
 
             <TouchableOpacity
-              style={[styles.registerBtn, loading && { opacity: 0.7 }]}
+              style={[styles.btn, loading && { opacity: 0.65 }]}
               onPress={handleRegister}
               disabled={loading}
               activeOpacity={0.85}
             >
-              <LinearGradient
-                colors={[Colors.terraDark, Colors.terra, Colors.terraLight]}
-                start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-                style={styles.registerBtnGrad}
-              >
-                {loading
-                  ? <ActivityIndicator color={Colors.white} />
-                  : <Text style={styles.registerBtnText}>🏠 Criar minha conta</Text>
-                }
-              </LinearGradient>
+              {loading ? <ActivityIndicator color={Colors.white} /> : <Text style={styles.btnText}>Criar minha conta</Text>}
             </TouchableOpacity>
 
             <Text style={styles.terms}>
               Ao criar sua conta, você concorda com nossa{' '}
-              <Text style={{ color: Colors.teal, fontWeight: '600' }}>Política de Privacidade</Text>
-              {' '}(LGPD).
+              <Text style={{ color: Colors.teal }}>Política de Privacidade</Text> (LGPD).
             </Text>
 
             <View style={styles.divider}>
@@ -163,12 +119,12 @@ export function RegisterScreen({ onGoToLogin }: Props) {
               <View style={styles.divLine} />
             </View>
 
-            <TouchableOpacity style={styles.loginLink} onPress={onGoToLogin}>
-              <Text style={styles.loginLinkText}>
-                Já tenho conta. <Text style={{ color: Colors.teal, fontWeight: '800' }}>Entrar</Text>
+            <TouchableOpacity style={styles.secondaryBtn} onPress={onGoToLogin}>
+              <Text style={styles.secondaryText}>
+                Já tenho conta.{'  '}
+                <Text style={{ color: Colors.teal, fontWeight: '700' }}>Entrar</Text>
               </Text>
             </TouchableOpacity>
-
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -177,55 +133,63 @@ export function RegisterScreen({ onGoToLogin }: Props) {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: Colors.terraDark },
+  safe: { flex: 1, backgroundColor: Colors.cream },
   scroll: { flexGrow: 1 },
-  header: { alignItems: 'center', paddingTop: 40, paddingBottom: 36, paddingHorizontal: Spacing.xl },
-  headerIcon: { fontSize: 40, marginBottom: 10 },
-  headerTitle: { fontSize: 24, fontWeight: '800', color: Colors.white, marginBottom: 6 },
-  headerSub: { fontSize: 13, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 20 },
-  form: {
-    flex: 1,
-    backgroundColor: Colors.cream,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    marginTop: -20,
-    padding: Spacing.xl,
-    paddingTop: 32,
+  logoArea: {
+    backgroundColor: Colors.white,
+    alignItems: 'center',
+    paddingTop: 52,
+    paddingBottom: 28,
+    paddingHorizontal: Spacing.xl,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+    gap: 14,
   },
-  title: { fontSize: 22, fontWeight: '800', color: Colors.text, marginBottom: 4 },
+  logo: { width: 200, height: 64 },
+  partnersBadge: {
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: Radius.full,
+    paddingHorizontal: 16,
+    paddingVertical: 7,
+  },
+  partnersText: { fontSize: 12, color: Colors.text2, fontWeight: '500' },
+  form: { flex: 1, padding: Spacing.xl, paddingTop: 28 },
+  title: { fontSize: 22, fontWeight: '800', color: Colors.text, marginBottom: 4, letterSpacing: -0.3 },
   subtitle: { fontSize: 14, color: Colors.text3, marginBottom: 24 },
-  label: { fontSize: 12, fontWeight: '700', color: Colors.text2, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 },
+  label: { fontSize: 11, fontWeight: '700', color: Colors.text2, marginBottom: 7, textTransform: 'uppercase', letterSpacing: 0.7 },
   labelHint: { fontSize: 11, fontWeight: '400', color: Colors.text3, textTransform: 'none', letterSpacing: 0 },
   input: {
     backgroundColor: Colors.white,
     borderWidth: 1.5,
     borderColor: Colors.border,
     borderRadius: Radius.sm,
-    padding: Spacing.md,
+    paddingHorizontal: 16,
+    paddingVertical: 13,
     fontSize: 14,
     color: Colors.text,
     marginBottom: Spacing.lg,
-    fontFamily: 'System',
   },
-  passWrap: { flexDirection: 'row' },
+  passRow: { flexDirection: 'row', alignItems: 'center', marginBottom: Spacing.lg },
+  inputPass: { flex: 1, marginBottom: 0, borderTopRightRadius: 0, borderBottomRightRadius: 0, borderRightWidth: 0 },
   eyeBtn: {
     backgroundColor: Colors.white,
     borderWidth: 1.5,
     borderColor: Colors.border,
-    borderLeftWidth: 0,
     borderTopRightRadius: Radius.sm,
     borderBottomRightRadius: Radius.sm,
     paddingHorizontal: 14,
+    height: 48,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  registerBtn: { borderRadius: Radius.md, overflow: 'hidden', marginTop: Spacing.lg, marginBottom: Spacing.md },
-  registerBtnGrad: { paddingVertical: 17, alignItems: 'center' },
-  registerBtnText: { fontSize: 16, fontWeight: '700', color: Colors.white, letterSpacing: -0.2 },
+  eyeText: { fontSize: 11, fontWeight: '600', color: Colors.teal },
+  btn: { backgroundColor: Colors.terra, borderRadius: Radius.sm, paddingVertical: 16, alignItems: 'center', marginBottom: 12, ...Shadow.sm },
+  btnText: { fontSize: 15, fontWeight: '700', color: Colors.white, letterSpacing: 0.2 },
   terms: { fontSize: 12, color: Colors.text3, textAlign: 'center', lineHeight: 18, marginBottom: Spacing.xl },
   divider: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: Spacing.xl },
   divLine: { flex: 1, height: 1, backgroundColor: Colors.border },
-  divText: { fontSize: 12, color: Colors.text3, fontWeight: '500' },
-  loginLink: { alignItems: 'center', paddingVertical: 8 },
-  loginLinkText: { fontSize: 14, color: Colors.text2 },
+  divText: { fontSize: 12, color: Colors.text3 },
+  secondaryBtn: { alignItems: 'center', paddingVertical: 8 },
+  secondaryText: { fontSize: 14, color: Colors.text2 },
 });

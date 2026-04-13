@@ -19,19 +19,11 @@ import { Colors } from '../theme';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-function TabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
-  return (
-    <View style={[styles.iconWrap, focused && styles.iconActive]}>
-      <Text style={{ fontSize: 22 }}>{emoji}</Text>
-    </View>
-  );
-}
-
-function DonateFAB() {
+function DonateIcon() {
   return (
     <View style={styles.fabWrap}>
       <View style={styles.fab}>
-        <Text style={{ fontSize: 26 }}>💛</Text>
+        <Text style={styles.fabHeart}>♥</Text>
       </View>
     </View>
   );
@@ -51,43 +43,30 @@ function TabNavigator() {
       <Tab.Screen
         name="Home"
         component={HomeScreen}
-        options={{
-          tabBarLabel: 'Início',
-          tabBarIcon: ({ focused }) => <TabIcon emoji="🏠" focused={focused} />,
-        }}
+        options={{ tabBarLabel: 'Início' }}
       />
       <Tab.Screen
         name="Campaign"
         component={CampaignScreen}
-        options={{
-          tabBarLabel: 'Campanha',
-          tabBarIcon: ({ focused }) => <TabIcon emoji="❤️" focused={focused} />,
-        }}
+        options={{ tabBarLabel: 'Campanha' }}
       />
       <Tab.Screen
         name="Donate"
         component={DonateScreen}
         options={{
-          tabBarLabel: 'Doe',
-          tabBarIcon: () => <DonateFAB />,
-          tabBarLabelStyle: { fontSize: 10, fontWeight: '700', color: Colors.terra },
+          tabBarLabel: '',
+          tabBarIcon: () => <DonateIcon />,
         }}
       />
       <Tab.Screen
         name="News"
         component={NewsScreen}
-        options={{
-          tabBarLabel: 'Novidades',
-          tabBarIcon: ({ focused }) => <TabIcon emoji="📰" focused={focused} />,
-        }}
+        options={{ tabBarLabel: 'Novidades' }}
       />
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
-        options={{
-          tabBarLabel: 'Perfil',
-          tabBarIcon: ({ focused }) => <TabIcon emoji="👤" focused={focused} />,
-        }}
+        options={{ tabBarLabel: 'Perfil' }}
       />
     </Tab.Navigator>
   );
@@ -104,20 +83,18 @@ function AppScreens() {
   );
 }
 
-// ── Loading splash ────────────────────────────────────────────
 function LoadingSplash() {
   return (
     <View style={styles.splash}>
-      <Text style={styles.splashLogo}>moradia</Text>
-      <ActivityIndicator color={Colors.tealLight} style={{ marginTop: 24 }} />
+      <Text style={styles.splashSub}>PROJETO</Text>
+      <Text style={styles.splashName}>moradia</Text>
+      <ActivityIndicator color={'rgba(255,255,255,0.4)'} style={{ marginTop: 32 }} />
     </View>
   );
 }
 
-// ── Root: decide auth vs app ──────────────────────────────────
 function RootNavigator() {
   const { user, loading } = useAuth();
-
   if (loading) return <LoadingSplash />;
   if (!user) return <AuthNavigator />;
   return <AppScreens />;
@@ -134,29 +111,58 @@ export function AppNavigator() {
 const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: Colors.white,
-    borderTopColor: '#E8E4DF',
+    borderTopColor: Colors.border,
     borderTopWidth: 1,
     height: 82,
-    paddingBottom: 16,
-    paddingTop: 4,
+    paddingBottom: 18,
+    paddingTop: 8,
   },
-  tabLabel: { fontSize: 10, fontWeight: '500' },
-  iconWrap: { alignItems: 'center', justifyContent: 'center', paddingTop: 2 },
-  iconActive: {},
-  fabWrap: { alignItems: 'center', justifyContent: 'center', marginTop: -22 },
+  tabLabel: {
+    fontSize: 11,
+    fontWeight: '500',
+    letterSpacing: 0.2,
+  },
+  fabWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: -20,
+  },
   fab: {
-    width: 58,
-    height: 58,
-    borderRadius: 29,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     backgroundColor: Colors.terra,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: Colors.terra,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.45,
+    shadowOpacity: 0.35,
     shadowRadius: 10,
-    elevation: 8,
+    elevation: 6,
   },
-  splash: { flex: 1, backgroundColor: Colors.tealDark, alignItems: 'center', justifyContent: 'center' },
-  splashLogo: { fontSize: 44, fontWeight: '800', color: Colors.white, letterSpacing: -1 },
+  fabHeart: {
+    fontSize: 22,
+    color: Colors.white,
+    lineHeight: 26,
+  },
+  splash: {
+    flex: 1,
+    backgroundColor: Colors.teal,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  splashSub: {
+    fontSize: 11,
+    fontWeight: '400',
+    color: 'rgba(255,255,255,0.6)',
+    letterSpacing: 4,
+    textTransform: 'uppercase',
+  },
+  splashName: {
+    fontSize: 48,
+    fontWeight: '800',
+    color: Colors.white,
+    letterSpacing: -1.5,
+    marginTop: 2,
+  },
 });
