@@ -87,11 +87,12 @@ export function HomeScreen() {
             <Text style={styles.cardLabel}>ACESSO RÁPIDO</Text>
             <View style={styles.actionsRow}>
               {[
-                { label: 'Transparência', screen: 'Transparency' },
-                { label: 'Eventos', screen: 'Events' },
-                { label: 'Contato', screen: 'Contact' },
+                { label: 'Transparência', screen: 'Transparency', icon: '▦' },
+                { label: 'Eventos',       screen: 'Events',       icon: '◻' },
+                { label: 'Contato',       screen: 'Contact',      icon: '◈' },
               ].map(a => (
                 <TouchableOpacity key={a.screen} style={styles.actionChip} onPress={() => navigation.navigate(a.screen)} activeOpacity={0.7}>
+                  <Text style={styles.actionChipIcon}>{a.icon}</Text>
                   <Text style={styles.actionChipText}>{a.label}</Text>
                 </TouchableOpacity>
               ))}
@@ -221,12 +222,16 @@ const styles = StyleSheet.create({
 
   actionsRow: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
   actionChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
     borderWidth: 1.5,
     borderColor: Colors.terra,
     borderRadius: Radius.full,
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
     paddingVertical: 8,
   },
+  actionChipIcon: { fontSize: 13, color: Colors.terra, lineHeight: 16 },
   actionChipText: { fontSize: 13, fontWeight: '600', color: Colors.terra },
 
   newsItem: {

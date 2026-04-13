@@ -18,10 +18,16 @@ export function CampaignScreen() {
 
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backRow} onPress={() => navigation.navigate('Home')}>
-            <Text style={styles.backArrow}>‹</Text>
+          <View style={styles.backRow}>
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={() => navigation.navigate('Home')}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            >
+              <Text style={styles.backArrow}>‹</Text>
+            </TouchableOpacity>
             <Text style={styles.backLabel}>INÍCIO</Text>
-          </TouchableOpacity>
+          </View>
           <View style={styles.activeBadge}>
             <View style={styles.activeDot} />
             <Text style={styles.activeBadgeText}>Campanha ativa</Text>
@@ -85,8 +91,9 @@ const styles = StyleSheet.create({
     paddingTop: 28,
     paddingBottom: 44,
   },
-  backRow: { flexDirection: 'row', alignItems: 'center', gap: 2, marginBottom: 14 },
-  backArrow: { fontSize: 20, color: 'rgba(255,255,255,0.85)', fontWeight: '700', lineHeight: 22 },
+  backRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 14 },
+  backBtn: { paddingRight: 4, paddingVertical: 2 },
+  backArrow: { fontSize: 22, color: 'rgba(255,255,255,0.85)', fontWeight: '700', lineHeight: 24 },
   backLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, color: 'rgba(255,255,255,0.85)' },
   activeBadge: {
     flexDirection: 'row',

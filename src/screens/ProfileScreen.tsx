@@ -60,10 +60,16 @@ export function ProfileScreen() {
         <View style={styles.header}>
           {/* Linha topo: voltar + sair */}
           <View style={styles.headerTopRow}>
-            <TouchableOpacity style={styles.backRow} onPress={() => navigation.navigate('Home')}>
-              <Text style={styles.backArrow}>‹</Text>
+            <View style={styles.backRow}>
+              <TouchableOpacity
+                style={styles.backBtn}
+                onPress={() => navigation.navigate('Home')}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+              >
+                <Text style={styles.backArrow}>‹</Text>
+              </TouchableOpacity>
               <Text style={styles.backLabel}>INÍCIO</Text>
-            </TouchableOpacity>
+            </View>
             <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
               <Text style={styles.logoutBtnText}>Sair</Text>
             </TouchableOpacity>
@@ -219,8 +225,9 @@ const styles = StyleSheet.create({
     paddingBottom: 44,
   },
   headerTopRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
-  backRow: { flexDirection: 'row', alignItems: 'center', gap: 2 },
-  backArrow: { fontSize: 20, color: 'rgba(255,255,255,0.85)', fontWeight: '700', lineHeight: 22 },
+  backRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  backBtn: { paddingRight: 4, paddingVertical: 2 },
+  backArrow: { fontSize: 22, color: 'rgba(255,255,255,0.85)', fontWeight: '700', lineHeight: 24 },
   backLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, color: 'rgba(255,255,255,0.85)' },
   logoutBtn: { backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: Radius.full, paddingHorizontal: 14, paddingVertical: 6, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' },
   logoutBtnText: { fontSize: 12, fontWeight: '600', color: Colors.white },

@@ -23,7 +23,7 @@ function TabIcon({ char, color, size = 20 }: { char: string; color: string; size
   return <Text style={{ fontSize: size, color, lineHeight: size + 4 }}>{char}</Text>;
 }
 
-function DonateIcon() {
+function DonateTabIcon() {
   return (
     <View style={styles.fabWrap}>
       <View style={styles.fab}>
@@ -33,7 +33,12 @@ function DonateIcon() {
   );
 }
 
-// Apenas as 5 abas reais — sem telas ocultas que distorcem o layout
+// Telas ocultas: sem botão E sem largura no tab bar
+const hiddenTabOptions = {
+  tabBarButton: () => <View style={{ width: 0 }} />,
+  tabBarItemStyle: { width: 0, overflow: 'hidden' as const },
+};
+
 function TabNavigator() {
   return (
     <Tab.Navigator
@@ -45,43 +50,61 @@ function TabNavigator() {
         tabBarLabelStyle: styles.tabLabel,
       }}
     >
+      {/* ── 5 abas reais ── */}
       <Tab.Screen
         name="Home"
         component={HomeScreen}
-        options={{ tabBarLabel: 'Início', tabBarIcon: ({ color }) => <TabIcon char="⌂" color={color} size={22} /> }}
+        options={{
+          tabBarLabel: 'Início',
+          tabBarIcon: ({ color }) => <TabIcon char="⌂" color={color} size={22} />,
+        }}
       />
       <Tab.Screen
         name="Campaign"
         component={CampaignScreen}
-        options={{ tabBarLabel: 'Campanha', tabBarIcon: ({ color }) => <TabIcon char="◎" color={color} size={18} /> }}
+        options={{
+          tabBarLabel: 'Campanha',
+          tabBarIcon: ({ color }) => <TabIcon char="◎" color={color} size={18} />,
+        }}
       />
       <Tab.Screen
         name="Donate"
         component={DonateScreen}
-        options={{ tabBarLabel: '', tabBarIcon: () => <DonateIcon /> }}
+        options={{
+          tabBarLabel: 'Doe',
+          tabBarIcon: () => <DonateTabIcon />,
+          tabBarLabelStyle: { ...styles.tabLabel, marginTop: 6 },
+        }}
       />
       <Tab.Screen
         name="News"
         component={NewsScreen}
-        options={{ tabBarLabel: 'Novidades', tabBarIcon: ({ color }) => <TabIcon char="☰" color={color} size={18} /> }}
+        options={{
+          tabBarLabel: 'Novidades',
+          tabBarIcon: ({ color }) => <TabIcon char="☰" color={color} size={18} />,
+        }}
       />
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
-        options={{ tabBarLabel: 'Perfil', tabBarIcon: ({ color }) => <TabIcon char="◉" color={color} size={18} /> }}
+        options={{
+          tabBarLabel: 'Perfil',
+          tabBarIcon: ({ color }) => <TabIcon char="◉" color={color} size={18} />,
+        }}
       />
+
+      {/* ── Telas secundárias: menu visível, item oculto ── */}
+      <Tab.Screen name="Transparency" component={TransparencyScreen} options={hiddenTabOptions} />
+      <Tab.Screen name="Events" component={EventsScreen} options={hiddenTabOptions} />
+      <Tab.Screen name="Contact" component={ContactScreen} options={hiddenTabOptions} />
     </Tab.Navigator>
   );
 }
 
-// Telas secundárias ficam no Stack — sem tab bar, mas com botão ‹ Voltar
 function AppScreens() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Main" component={TabNavigator} />
-      <Stack.Screen name="Transparency" component={TransparencyScreen} />
-      <Stack.Screen name="Events" component={EventsScreen} />
-      <Stack.Screen name="Contact" component={ContactScreen} />
     </Stack.Navigator>
   );
 }

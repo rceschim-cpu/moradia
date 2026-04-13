@@ -29,10 +29,17 @@ export function TransparencyScreen() {
 
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backRow} onPress={() => navigation.navigate('Home')}>
-            <Text style={styles.backArrow}>‹</Text>
+          <View style={styles.labelRow}>
+            {/* Só a seta é clicável, com área de toque generosa */}
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={() => navigation.jumpTo('Home')}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            >
+              <Text style={styles.backArrow}>‹</Text>
+            </TouchableOpacity>
             <Text style={styles.headerLabel}>PRESTAÇÃO DE CONTAS</Text>
-          </TouchableOpacity>
+          </View>
           <Text style={styles.headerTitle}>Transparência</Text>
           <Text style={styles.headerSub}>Veja como cada real é investido</Text>
         </View>
@@ -91,8 +98,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  backRow: { flexDirection: 'row', alignItems: 'center', gap: 2, marginBottom: 10 },
-  backArrow: { fontSize: 20, color: Colors.teal, fontWeight: '700', lineHeight: 22 },
+  labelRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
+  backBtn: { paddingRight: 6, paddingVertical: 2 },
+  backArrow: { fontSize: 22, color: Colors.teal, fontWeight: '700', lineHeight: 24 },
   headerLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, color: Colors.teal },
   headerTitle: { fontSize: 28, fontWeight: '800', color: Colors.text, letterSpacing: -0.5, marginBottom: 4 },
   headerSub: { fontSize: 13, color: Colors.text3, lineHeight: 20 },
