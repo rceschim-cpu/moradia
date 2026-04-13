@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, ActivityIndicator, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,6 +12,8 @@ import { ProfileScreen } from '../screens/ProfileScreen';
 import { TransparencyScreen } from '../screens/TransparencyScreen';
 import { EventsScreen } from '../screens/EventsScreen';
 import { ContactScreen } from '../screens/ContactScreen';
+import { AuthNavigator } from './AuthNavigator';
+import { useAuth } from '../context/AuthContext';
 import { Colors } from '../theme';
 
 const Tab = createBottomTabNavigator();
@@ -91,15 +93,40 @@ function TabNavigator() {
   );
 }
 
+function AppScreens() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Main" component={TabNavigator} />
+      <Stack.Screen name="Transparency" component={TransparencyScreen} options={{ presentation: 'modal' }} />
+      <Stack.Screen name="Events" component={EventsScreen} options={{ presentation: 'modal' }} />
+      <Stack.Screen name="Contact" component={ContactScreen} options={{ presentation: 'modal' }} />
+    </Stack.Navigator>
+  );
+}
+
+// ── Loading splash ────────────────────────────────────────────
+function LoadingSplash() {
+  return (
+    <View style={styles.splash}>
+      <Text style={styles.splashLogo}>moradia</Text>
+      <ActivityIndicator color={Colors.tealLight} style={{ marginTop: 24 }} />
+    </View>
+  );
+}
+
+// ── Root: decide auth vs app ──────────────────────────────────
+function RootNavigator() {
+  const { user, loading } = useAuth();
+
+  if (loading) return <LoadingSplash />;
+  if (!user) return <AuthNavigator />;
+  return <AppScreens />;
+}
+
 export function AppNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Main" component={TabNavigator} />
-        <Stack.Screen name="Transparency" component={TransparencyScreen} options={{ presentation: 'modal' }} />
-        <Stack.Screen name="Events" component={EventsScreen} options={{ presentation: 'modal' }} />
-        <Stack.Screen name="Contact" component={ContactScreen} options={{ presentation: 'modal' }} />
-      </Stack.Navigator>
+      <RootNavigator />
     </NavigationContainer>
   );
 }
@@ -113,23 +140,10 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     paddingTop: 4,
   },
-  tabLabel: {
-    fontSize: 10,
-    fontWeight: '500',
-  },
-  iconWrap: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 2,
-  },
-  iconActive: {
-    // Active indicator can be added here if needed
-  },
-  fabWrap: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: -22,
-  },
+  tabLabel: { fontSize: 10, fontWeight: '500' },
+  iconWrap: { alignItems: 'center', justifyContent: 'center', paddingTop: 2 },
+  iconActive: {},
+  fabWrap: { alignItems: 'center', justifyContent: 'center', marginTop: -22 },
   fab: {
     width: 58,
     height: 58,
@@ -143,4 +157,6 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 8,
   },
+  splash: { flex: 1, backgroundColor: Colors.tealDark, alignItems: 'center', justifyContent: 'center' },
+  splashLogo: { fontSize: 44, fontWeight: '800', color: Colors.white, letterSpacing: -1 },
 });
