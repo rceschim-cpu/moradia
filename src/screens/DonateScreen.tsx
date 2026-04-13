@@ -4,12 +4,14 @@ import {
   StyleSheet, Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { CTAButton } from '../components/CTAButton';
 import { Colors, Spacing, Radius, Shadow } from '../theme';
 
 const AMOUNTS = [20, 50, 100, 150, 200, 0];
 
 export function DonateScreen() {
+  const navigation = useNavigation<any>();
   const [selectedAmount, setSelectedAmount] = useState(50);
   const [recurrent, setRecurrent] = useState(true);
   const [payment, setPayment] = useState<'pix' | 'card' | 'boleto'>('pix');
@@ -38,7 +40,10 @@ export function DonateScreen() {
 
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerLabel}>FAZER UMA DOAÇÃO</Text>
+          <TouchableOpacity style={styles.backRow} onPress={() => navigation.navigate('Home')}>
+            <Text style={styles.backArrow}>‹</Text>
+            <Text style={styles.headerLabel}>FAZER UMA DOAÇÃO</Text>
+          </TouchableOpacity>
           <Text style={styles.headerTitle}>Cada real constrói{'\n'}um lar</Text>
         </View>
 
@@ -118,7 +123,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  headerLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, color: Colors.terra, marginBottom: 8 },
+  backRow: { flexDirection: 'row', alignItems: 'center', gap: 2, marginBottom: 10 },
+  backArrow: { fontSize: 20, color: Colors.terra, fontWeight: '700', lineHeight: 22 },
+  headerLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, color: Colors.terra },
   headerTitle: { fontSize: 28, fontWeight: '800', color: Colors.text, lineHeight: 34, letterSpacing: -0.5 },
   body: { backgroundColor: Colors.cream, padding: Spacing.md },
   sectionLabel: { fontSize: 11, fontWeight: '700', color: Colors.text3, textTransform: 'uppercase', letterSpacing: 0.7, marginBottom: 10, marginTop: 20 },

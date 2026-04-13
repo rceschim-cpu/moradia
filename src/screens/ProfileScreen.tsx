@@ -1,11 +1,16 @@
-import React from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, TextInput, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { updateProfile } from 'firebase/auth';
+import { doc, updateDoc } from 'firebase/firestore';
 import { Colors, Spacing, Radius, Shadow } from '../theme';
 import { donationHistory } from '../data/mock';
 import { useAuth } from '../context/AuthContext';
+import { auth, db } from '../services/firebase';
 
 export function ProfileScreen() {
+  const navigation = useNavigation<any>();
   const { user, profile, logout } = useAuth();
 
   const displayName = profile?.name ?? user?.displayName ?? 'Parceiro';
@@ -13,23 +18,39 @@ export function ProfileScreen() {
   const totalDonated = profile?.totalDonated ?? 0;
   const housesHelped = profile?.housesHelped ?? 0;
 
-  function handleLogout() {
-    Alert.alert(
-      'Sair da conta',
-      'Tem certeza que deseja sair?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { text: 'Sair', style: 'destructive', onPress: logout },
-      ],
-    );
+  const [editing, setEditing] = useState(false);
+  const [editName, setEditName] = useState(displayName);
+  const [editWhatsapp, setEditWhatsapp] = useState(profile?.whatsapp ?? '');
+  const [saving, setSaving] = useState(false);
+
+  async function handleSave() {
+    if (!editName.trim()) { Alert.alert('Atenção', 'O nome não pode ser vazio.'); return; }
+    setSaving(true);
+    try {
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, { displayName: editName.trim() });
+        await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+          name: editName.trim(),
+          whatsapp: editWhatsapp.trim(),
+        });
+      }
+      setEditing(false);
+      Alert.alert('Salvo!', 'Seus dados foram atualizados.');
+    } catch {
+      Alert.alert('Erro', 'Não foi possível salvar as alterações.');
+    } finally {
+      setSaving(false);
+    }
   }
 
-  const initials = displayName
-    .split(' ')
-    .slice(0, 2)
-    .map((n: string) => n[0])
-    .join('')
-    .toUpperCase();
+  function handleLogout() {
+    Alert.alert('Sair da conta', 'Tem certeza que deseja sair?', [
+      { text: 'Cancelar', style: 'cancel' },
+      { text: 'Sair', style: 'destructive', onPress: logout },
+    ]);
+  }
+
+  const initials = displayName.split(' ').slice(0, 2).map((n: string) => n[0]).join('').toUpperCase();
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -37,14 +58,21 @@ export function ProfileScreen() {
 
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
-            <Text style={styles.logoutBtnText}>Sair</Text>
-          </TouchableOpacity>
+          {/* Linha topo: voltar + sair */}
+          <View style={styles.headerTopRow}>
+            <TouchableOpacity style={styles.backRow} onPress={() => navigation.navigate('Home')}>
+              <Text style={styles.backArrow}>‹</Text>
+              <Text style={styles.backLabel}>INÍCIO</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
+              <Text style={styles.logoutBtnText}>Sair</Text>
+            </TouchableOpacity>
+          </View>
 
           <View style={styles.avatar}>
             <Text style={styles.avatarText}>{initials}</Text>
           </View>
-          <Text style={styles.profileName}>{displayName}</Text>
+          <Text style={styles.profileName}>{editing ? editName : displayName}</Text>
           <Text style={styles.profileEmail}>{user?.email}</Text>
           <Text style={styles.profileSince}>Parceiro desde {partnerSince}</Text>
 
@@ -87,7 +115,66 @@ export function ProfileScreen() {
             </View>
           </View>
 
-          {/* History */}
+          {/* Editar perfil */}
+          <View style={styles.card}>
+            <View style={styles.cardTitleRow}>
+              <Text style={styles.cardHeading}>MEUS DADOS</Text>
+              {!editing && (
+                <TouchableOpacity onPress={() => { setEditName(displayName); setEditWhatsapp(profile?.whatsapp ?? ''); setEditing(true); }}>
+                  <Text style={styles.editBtn}>Editar</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            {editing ? (
+              <>
+                <Text style={styles.fieldLabel}>NOME</Text>
+                <TextInput
+                  style={styles.input}
+                  value={editName}
+                  onChangeText={setEditName}
+                  autoCapitalize="words"
+                  placeholder="Seu nome"
+                  placeholderTextColor={Colors.text3}
+                />
+                <Text style={styles.fieldLabel}>WHATSAPP</Text>
+                <TextInput
+                  style={styles.input}
+                  value={editWhatsapp}
+                  onChangeText={setEditWhatsapp}
+                  keyboardType="phone-pad"
+                  placeholder="(61) 99999-9999"
+                  placeholderTextColor={Colors.text3}
+                />
+                <Text style={styles.emailNote}>E-mail não pode ser alterado aqui.</Text>
+                <View style={styles.editBtnsRow}>
+                  <TouchableOpacity style={styles.cancelBtn} onPress={() => setEditing(false)}>
+                    <Text style={styles.cancelBtnText}>Cancelar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.saveBtn} onPress={handleSave} disabled={saving}>
+                    {saving ? <ActivityIndicator color={Colors.white} size="small" /> : <Text style={styles.saveBtnText}>Salvar</Text>}
+                  </TouchableOpacity>
+                </View>
+              </>
+            ) : (
+              <>
+                <View style={styles.dataRow}>
+                  <Text style={styles.dataLabel}>Nome</Text>
+                  <Text style={styles.dataValue}>{displayName}</Text>
+                </View>
+                <View style={styles.dataRow}>
+                  <Text style={styles.dataLabel}>E-mail</Text>
+                  <Text style={styles.dataValue}>{user?.email}</Text>
+                </View>
+                <View style={[styles.dataRow, { borderBottomWidth: 0 }]}>
+                  <Text style={styles.dataLabel}>WhatsApp</Text>
+                  <Text style={styles.dataValue}>{profile?.whatsapp || '—'}</Text>
+                </View>
+              </>
+            )}
+          </View>
+
+          {/* Histórico */}
           <View style={styles.card}>
             <Text style={styles.cardHeading}>HISTÓRICO DE DOAÇÕES</Text>
             {donationHistory.length === 0 ? (
@@ -128,65 +215,47 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: Colors.teal,
     padding: Spacing.xl,
-    paddingTop: 28,
+    paddingTop: 20,
     paddingBottom: 44,
-    alignItems: 'center',
   },
-  logoutBtn: {
-    position: 'absolute',
-    top: Spacing.lg,
-    right: Spacing.xl,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderRadius: Radius.full,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.25)',
-  },
+  headerTopRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
+  backRow: { flexDirection: 'row', alignItems: 'center', gap: 2 },
+  backArrow: { fontSize: 20, color: 'rgba(255,255,255,0.85)', fontWeight: '700', lineHeight: 22 },
+  backLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, color: 'rgba(255,255,255,0.85)' },
+  logoutBtn: { backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: Radius.full, paddingHorizontal: 14, paddingVertical: 6, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' },
   logoutBtnText: { fontSize: 12, fontWeight: '600', color: Colors.white },
-  avatar: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderWidth: 2,
-    borderColor: 'rgba(255,255,255,0.4)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: Spacing.md,
-  },
+  avatar: { width: 72, height: 72, borderRadius: 36, backgroundColor: 'rgba(255,255,255,0.2)', borderWidth: 2, borderColor: 'rgba(255,255,255,0.4)', alignItems: 'center', justifyContent: 'center', marginBottom: Spacing.md, alignSelf: 'center' },
   avatarText: { fontSize: 26, fontWeight: '800', color: Colors.white },
-  profileName: { fontSize: 20, fontWeight: '800', color: Colors.white },
-  profileEmail: { fontSize: 12, color: 'rgba(255,255,255,0.65)', marginTop: 2 },
-  profileSince: { fontSize: 12, color: 'rgba(255,255,255,0.75)', marginTop: 4 },
-  badgesRow: { flexDirection: 'row', gap: 8, marginTop: Spacing.md },
-  badge: {
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderRadius: Radius.full,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.25)',
-  },
+  profileName: { fontSize: 20, fontWeight: '800', color: Colors.white, textAlign: 'center' },
+  profileEmail: { fontSize: 12, color: 'rgba(255,255,255,0.65)', marginTop: 2, textAlign: 'center' },
+  profileSince: { fontSize: 12, color: 'rgba(255,255,255,0.75)', marginTop: 4, textAlign: 'center' },
+  badgesRow: { flexDirection: 'row', gap: 8, marginTop: Spacing.md, justifyContent: 'center' },
+  badge: { backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: Radius.full, paddingHorizontal: 14, paddingVertical: 6, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' },
   badgeText: { fontSize: 11, fontWeight: '600', color: Colors.white, letterSpacing: 0.3 },
   body: { backgroundColor: Colors.cream, padding: Spacing.md, marginTop: -20 },
-  impactBanner: {
-    backgroundColor: Colors.terra,
-    borderRadius: Radius.lg,
-    padding: Spacing.xl,
-    alignItems: 'center',
-    marginBottom: Spacing.md,
-    ...Shadow.md,
-  },
+  impactBanner: { backgroundColor: Colors.terra, borderRadius: Radius.lg, padding: Spacing.xl, alignItems: 'center', marginBottom: Spacing.md, ...Shadow.md },
   impactLabel: { fontSize: 10, fontWeight: '700', color: 'rgba(255,255,255,0.7)', letterSpacing: 1, marginBottom: 8 },
   impactBig: { fontSize: 44, fontWeight: '800', color: Colors.white, lineHeight: 48 },
   impactSub: { fontSize: 13, color: 'rgba(255,255,255,0.85)', marginTop: 6, fontWeight: '500' },
   card: { backgroundColor: Colors.white, borderRadius: Radius.lg, padding: Spacing.xl, marginBottom: Spacing.md, ...Shadow.sm },
   cardHeading: { fontSize: 10, fontWeight: '700', color: Colors.text3, letterSpacing: 0.7, marginBottom: Spacing.md },
+  cardTitleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: Spacing.md },
+  editBtn: { fontSize: 13, fontWeight: '700', color: Colors.teal },
   statsRow: { flexDirection: 'row', gap: Spacing.sm },
   statBox: { flex: 1, backgroundColor: Colors.cream, borderRadius: Radius.sm, padding: Spacing.md, alignItems: 'center' },
   statN: { fontSize: 16, fontWeight: '800', color: Colors.teal, textAlign: 'center', lineHeight: 22 },
   statL: { fontSize: 10, color: Colors.text3, marginTop: 4, textAlign: 'center', lineHeight: 14 },
+  fieldLabel: { fontSize: 10, fontWeight: '700', color: Colors.text3, letterSpacing: 0.7, marginBottom: 6 },
+  input: { backgroundColor: Colors.cream, borderWidth: 1.5, borderColor: Colors.border, borderRadius: Radius.sm, paddingHorizontal: 14, paddingVertical: 12, fontSize: 14, color: Colors.text, marginBottom: Spacing.md },
+  emailNote: { fontSize: 11, color: Colors.text3, marginBottom: Spacing.md },
+  editBtnsRow: { flexDirection: 'row', gap: 10 },
+  cancelBtn: { flex: 1, paddingVertical: 13, alignItems: 'center', borderRadius: Radius.sm, borderWidth: 1.5, borderColor: Colors.border },
+  cancelBtnText: { fontSize: 14, fontWeight: '600', color: Colors.text2 },
+  saveBtn: { flex: 1, paddingVertical: 13, alignItems: 'center', borderRadius: Radius.sm, backgroundColor: Colors.teal },
+  saveBtnText: { fontSize: 14, fontWeight: '700', color: Colors.white },
+  dataRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 11, borderBottomWidth: 1, borderBottomColor: Colors.border },
+  dataLabel: { fontSize: 13, color: Colors.text3, fontWeight: '500' },
+  dataValue: { fontSize: 13, color: Colors.text, fontWeight: '600', maxWidth: '60%', textAlign: 'right' },
   historyItem: { flexDirection: 'row', alignItems: 'center', gap: Spacing.md, paddingVertical: 13, borderBottomWidth: 1, borderBottomColor: Colors.border },
   historyDot: { width: 36, height: 36, borderRadius: 18, backgroundColor: Colors.tealBg, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
   historyDotText: { fontSize: 13, fontWeight: '800', color: Colors.teal },

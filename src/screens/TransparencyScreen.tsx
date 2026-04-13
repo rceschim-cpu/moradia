@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BackButton } from '../components/BackButton';
+import { useNavigation } from '@react-navigation/native';
 import { Colors, Spacing, Radius, Shadow } from '../theme';
 import { transparencyData } from '../data/mock';
 
@@ -20,6 +20,7 @@ function BarItem({ label, value, pct, color }: { label: string; value: string; p
 }
 
 export function TransparencyScreen() {
+  const navigation = useNavigation<any>();
   const d = transparencyData;
 
   return (
@@ -28,14 +29,15 @@ export function TransparencyScreen() {
 
         {/* Header */}
         <View style={styles.header}>
-          <BackButton />
-          <Text style={styles.headerLabel}>PRESTAÇÃO DE CONTAS</Text>
+          <TouchableOpacity style={styles.backRow} onPress={() => navigation.navigate('Home')}>
+            <Text style={styles.backArrow}>‹</Text>
+            <Text style={styles.headerLabel}>PRESTAÇÃO DE CONTAS</Text>
+          </TouchableOpacity>
           <Text style={styles.headerTitle}>Transparência</Text>
           <Text style={styles.headerSub}>Veja como cada real é investido</Text>
         </View>
 
         <View style={styles.body}>
-          {/* Big stats */}
           <View style={styles.bigCard}>
             <Text style={styles.period}>RESUMO · {d.period}</Text>
             <View style={styles.bigGrid}>
@@ -54,7 +56,6 @@ export function TransparencyScreen() {
             </View>
           </View>
 
-          {/* Monthly chart */}
           <View style={styles.card}>
             <Text style={styles.cardHeading}>ARRECADAÇÃO MENSAL (2026)</Text>
             {d.monthly.map(item => (
@@ -62,7 +63,6 @@ export function TransparencyScreen() {
             ))}
           </View>
 
-          {/* Allocation chart */}
           <View style={styles.card}>
             <Text style={styles.cardHeading}>DESTINO DOS RECURSOS</Text>
             {d.allocation.map(item => (
@@ -86,12 +86,14 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: Colors.white,
     padding: Spacing.xl,
-    paddingTop: 28,
+    paddingTop: 20,
     paddingBottom: 24,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  headerLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, color: Colors.teal, marginBottom: 8 },
+  backRow: { flexDirection: 'row', alignItems: 'center', gap: 2, marginBottom: 10 },
+  backArrow: { fontSize: 20, color: Colors.teal, fontWeight: '700', lineHeight: 22 },
+  headerLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, color: Colors.teal },
   headerTitle: { fontSize: 28, fontWeight: '800', color: Colors.text, letterSpacing: -0.5, marginBottom: 4 },
   headerSub: { fontSize: 13, color: Colors.text3, lineHeight: 20 },
   body: { backgroundColor: Colors.cream, padding: Spacing.md },

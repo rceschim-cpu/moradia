@@ -18,6 +18,10 @@ export function CampaignScreen() {
 
         {/* Header */}
         <View style={styles.header}>
+          <TouchableOpacity style={styles.backRow} onPress={() => navigation.navigate('Home')}>
+            <Text style={styles.backArrow}>‹</Text>
+            <Text style={styles.backLabel}>INÍCIO</Text>
+          </TouchableOpacity>
           <View style={styles.activeBadge}>
             <View style={styles.activeDot} />
             <Text style={styles.activeBadgeText}>Campanha ativa</Text>
@@ -81,6 +85,9 @@ const styles = StyleSheet.create({
     paddingTop: 28,
     paddingBottom: 44,
   },
+  backRow: { flexDirection: 'row', alignItems: 'center', gap: 2, marginBottom: 14 },
+  backArrow: { fontSize: 20, color: 'rgba(255,255,255,0.85)', fontWeight: '700', lineHeight: 22 },
+  backLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, color: 'rgba(255,255,255,0.85)' },
   activeBadge: {
     flexDirection: 'row',
     alignItems: 'center',

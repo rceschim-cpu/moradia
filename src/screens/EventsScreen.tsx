@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BackButton } from '../components/BackButton';
+import { useNavigation } from '@react-navigation/native';
 import { Colors, Spacing, Radius, Shadow } from '../theme';
 import { events } from '../data/mock';
 
 export function EventsScreen() {
+  const navigation = useNavigation<any>();
   const [confirmed, setConfirmed] = useState<Record<string, boolean>>(
     events.reduce((acc, e) => ({ ...acc, [e.id]: e.confirmed }), {}),
   );
@@ -20,8 +21,10 @@ export function EventsScreen() {
 
         {/* Header */}
         <View style={styles.header}>
-          <BackButton />
-          <Text style={styles.headerLabel}>AGENDA</Text>
+          <TouchableOpacity style={styles.backRow} onPress={() => navigation.navigate('Home')}>
+            <Text style={styles.backArrow}>‹</Text>
+            <Text style={styles.headerLabel}>AGENDA</Text>
+          </TouchableOpacity>
           <Text style={styles.headerTitle}>Eventos</Text>
         </View>
 
@@ -59,12 +62,14 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: Colors.white,
     padding: Spacing.xl,
-    paddingTop: 28,
+    paddingTop: 20,
     paddingBottom: 20,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  headerLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, color: Colors.teal, marginBottom: 8 },
+  backRow: { flexDirection: 'row', alignItems: 'center', gap: 2, marginBottom: 10 },
+  backArrow: { fontSize: 20, color: Colors.teal, fontWeight: '700', lineHeight: 22 },
+  headerLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, color: Colors.teal },
   headerTitle: { fontSize: 28, fontWeight: '800', color: Colors.text, letterSpacing: -0.5 },
   list: { backgroundColor: Colors.cream, padding: Spacing.md },
   eventCard: { backgroundColor: Colors.white, borderRadius: Radius.lg, padding: Spacing.lg, marginBottom: 10, flexDirection: 'row', gap: 14, alignItems: 'flex-start', ...Shadow.sm },

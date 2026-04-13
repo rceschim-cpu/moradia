@@ -40,34 +40,21 @@ function TabNavigator() {
         tabBarLabelStyle: styles.tabLabel,
       }}
     >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ tabBarLabel: 'Início' }}
-      />
-      <Tab.Screen
-        name="Campaign"
-        component={CampaignScreen}
-        options={{ tabBarLabel: 'Campanha' }}
-      />
+      {/* ── Abas visíveis ── */}
+      <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarLabel: 'Início' }} />
+      <Tab.Screen name="Campaign" component={CampaignScreen} options={{ tabBarLabel: 'Campanha' }} />
       <Tab.Screen
         name="Donate"
         component={DonateScreen}
-        options={{
-          tabBarLabel: '',
-          tabBarIcon: () => <DonateIcon />,
-        }}
+        options={{ tabBarLabel: '', tabBarIcon: () => <DonateIcon /> }}
       />
-      <Tab.Screen
-        name="News"
-        component={NewsScreen}
-        options={{ tabBarLabel: 'Novidades' }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{ tabBarLabel: 'Perfil' }}
-      />
+      <Tab.Screen name="News" component={NewsScreen} options={{ tabBarLabel: 'Novidades' }} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarLabel: 'Perfil' }} />
+
+      {/* ── Telas acessíveis por navegação (sem item no tab bar) ── */}
+      <Tab.Screen name="Transparency" component={TransparencyScreen} options={{ tabBarButton: () => null }} />
+      <Tab.Screen name="Events" component={EventsScreen} options={{ tabBarButton: () => null }} />
+      <Tab.Screen name="Contact" component={ContactScreen} options={{ tabBarButton: () => null }} />
     </Tab.Navigator>
   );
 }
@@ -76,9 +63,6 @@ function AppScreens() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Main" component={TabNavigator} />
-      <Stack.Screen name="Transparency" component={TransparencyScreen} options={{ presentation: 'modal' }} />
-      <Stack.Screen name="Events" component={EventsScreen} options={{ presentation: 'modal' }} />
-      <Stack.Screen name="Contact" component={ContactScreen} options={{ presentation: 'modal' }} />
     </Stack.Navigator>
   );
 }
@@ -117,16 +101,8 @@ const styles = StyleSheet.create({
     paddingBottom: 18,
     paddingTop: 8,
   },
-  tabLabel: {
-    fontSize: 11,
-    fontWeight: '500',
-    letterSpacing: 0.2,
-  },
-  fabWrap: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: -20,
-  },
+  tabLabel: { fontSize: 11, fontWeight: '500', letterSpacing: 0.2 },
+  fabWrap: { alignItems: 'center', justifyContent: 'center', marginTop: -20 },
   fab: {
     width: 52,
     height: 52,
@@ -140,29 +116,8 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 6,
   },
-  fabHeart: {
-    fontSize: 22,
-    color: Colors.white,
-    lineHeight: 26,
-  },
-  splash: {
-    flex: 1,
-    backgroundColor: Colors.teal,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  splashSub: {
-    fontSize: 11,
-    fontWeight: '400',
-    color: 'rgba(255,255,255,0.6)',
-    letterSpacing: 4,
-    textTransform: 'uppercase',
-  },
-  splashName: {
-    fontSize: 48,
-    fontWeight: '800',
-    color: Colors.white,
-    letterSpacing: -1.5,
-    marginTop: 2,
-  },
+  fabHeart: { fontSize: 22, color: Colors.white, lineHeight: 26 },
+  splash: { flex: 1, backgroundColor: Colors.teal, alignItems: 'center', justifyContent: 'center' },
+  splashSub: { fontSize: 11, fontWeight: '400', color: 'rgba(255,255,255,0.6)', letterSpacing: 4, textTransform: 'uppercase' },
+  splashName: { fontSize: 48, fontWeight: '800', color: Colors.white, letterSpacing: -1.5, marginTop: 2 },
 });

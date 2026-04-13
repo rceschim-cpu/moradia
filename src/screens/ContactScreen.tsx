@@ -4,7 +4,7 @@ import {
   StyleSheet, Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BackButton } from '../components/BackButton';
+import { useNavigation } from '@react-navigation/native';
 import { CTAButton } from '../components/CTAButton';
 import { Colors, Spacing, Radius, Shadow } from '../theme';
 
@@ -15,6 +15,7 @@ const CONTACTS = [
 ];
 
 export function ContactScreen() {
+  const navigation = useNavigation<any>();
   const [msg, setMsg] = useState('');
   const [senderName, setSenderName] = useState('');
 
@@ -24,8 +25,10 @@ export function ContactScreen() {
 
         {/* Header */}
         <View style={styles.header}>
-          <BackButton />
-          <Text style={styles.headerLabel}>RELACIONAMENTO</Text>
+          <TouchableOpacity style={styles.backRow} onPress={() => navigation.navigate('Home')}>
+            <Text style={styles.backArrow}>‹</Text>
+            <Text style={styles.headerLabel}>RELACIONAMENTO</Text>
+          </TouchableOpacity>
           <Text style={styles.headerTitle}>Fale com a gente</Text>
         </View>
 
@@ -43,7 +46,6 @@ export function ContactScreen() {
             </TouchableOpacity>
           ))}
 
-          {/* Message form */}
           <View style={styles.formCard}>
             <Text style={styles.formHeading}>ENVIAR MENSAGEM</Text>
             <TextInput
@@ -81,12 +83,14 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: Colors.white,
     padding: Spacing.xl,
-    paddingTop: 28,
+    paddingTop: 20,
     paddingBottom: 20,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  headerLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, color: Colors.teal, marginBottom: 8 },
+  backRow: { flexDirection: 'row', alignItems: 'center', gap: 2, marginBottom: 10 },
+  backArrow: { fontSize: 20, color: Colors.teal, fontWeight: '700', lineHeight: 22 },
+  headerLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, color: Colors.teal },
   headerTitle: { fontSize: 28, fontWeight: '800', color: Colors.text, letterSpacing: -0.5 },
   body: { backgroundColor: Colors.cream, padding: Spacing.md },
   contactRow: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: Colors.white, borderRadius: Radius.lg, padding: 17, marginBottom: 10, ...Shadow.sm },

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { Colors, Spacing, Radius, Shadow } from '../theme';
 import { newsItems } from '../data/mock';
 
@@ -13,6 +14,7 @@ const CATEGORY_STYLE: Record<string, { text: string; label: string }> = {
 };
 
 export function NewsScreen() {
+  const navigation = useNavigation<any>();
   const [activeFilter, setActiveFilter] = useState('Todos');
 
   return (
@@ -21,7 +23,10 @@ export function NewsScreen() {
 
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerLabel}>INFORMATIVO</Text>
+          <TouchableOpacity style={styles.backRow} onPress={() => navigation.navigate('Home')}>
+            <Text style={styles.backArrow}>‹</Text>
+            <Text style={styles.headerLabel}>INFORMATIVO</Text>
+          </TouchableOpacity>
           <Text style={styles.headerTitle}>Novidades</Text>
         </View>
 
@@ -75,7 +80,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  headerLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, color: Colors.teal, marginBottom: 8 },
+  backRow: { flexDirection: 'row', alignItems: 'center', gap: 2, marginBottom: 10 },
+  backArrow: { fontSize: 20, color: Colors.teal, fontWeight: '700', lineHeight: 22 },
+  headerLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, color: Colors.teal },
   headerTitle: { fontSize: 28, fontWeight: '800', color: Colors.text, letterSpacing: -0.5 },
   filtersBg: { backgroundColor: Colors.white, borderBottomWidth: 1, borderBottomColor: Colors.border },
   filtersRow: { gap: 8, paddingHorizontal: Spacing.xl, paddingVertical: 14 },
