@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { BackButton } from '../components/BackButton';
 import { Colors, Spacing, Radius, Shadow } from '../theme';
 import { events } from '../data/mock';
 
@@ -19,6 +20,7 @@ export function EventsScreen() {
 
         {/* Header */}
         <View style={styles.header}>
+          <BackButton />
           <Text style={styles.headerLabel}>AGENDA</Text>
           <Text style={styles.headerTitle}>Eventos</Text>
         </View>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { BackButton } from '../components/BackButton';
 import { Colors, Spacing, Radius, Shadow } from '../theme';
 import { transparencyData } from '../data/mock';
 
@@ -27,6 +28,7 @@ export function TransparencyScreen() {
 
         {/* Header */}
         <View style={styles.header}>
+          <BackButton />
           <Text style={styles.headerLabel}>PRESTAÇÃO DE CONTAS</Text>
           <Text style={styles.headerTitle}>Transparência</Text>
           <Text style={styles.headerSub}>Veja como cada real é investido</Text>

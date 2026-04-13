@@ -4,6 +4,7 @@ import {
   StyleSheet, Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { BackButton } from '../components/BackButton';
 import { CTAButton } from '../components/CTAButton';
 import { Colors, Spacing, Radius, Shadow } from '../theme';
 
@@ -23,6 +24,7 @@ export function ContactScreen() {
 
         {/* Header */}
         <View style={styles.header}>
+          <BackButton />
           <Text style={styles.headerLabel}>RELACIONAMENTO</Text>
           <Text style={styles.headerTitle}>Fale com a gente</Text>
         </View>
