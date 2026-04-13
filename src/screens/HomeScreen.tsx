@@ -30,9 +30,6 @@ export function HomeScreen() {
             style={styles.logo}
             resizeMode="contain"
           />
-          <TouchableOpacity style={styles.notifBtn}>
-            <View style={styles.notifDot} />
-          </TouchableOpacity>
         </View>
 
         {/* ── Greeting ── */}
@@ -135,17 +132,16 @@ const styles = StyleSheet.create({
   scroll: { backgroundColor: Colors.cream },
 
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: Colors.white,
     paddingHorizontal: Spacing.xl,
-    paddingTop: Spacing.md,
-    paddingBottom: Spacing.md,
+    paddingTop: 16,
+    paddingBottom: 16,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  logo: { width: 140, height: 44 },
+  logo: { width: 220, height: 72, borderRadius: 10 },
   notifBtn: {
     width: 36,
     height: 36,
