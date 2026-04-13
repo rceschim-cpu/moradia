@@ -28,7 +28,7 @@
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro",
-      "output": "static",
+      "output": "single",
       "name": "Projeto Moradia",
       "shortName": "Moradia",
       "description": "App de doação e engajamento do Projeto Moradia"
