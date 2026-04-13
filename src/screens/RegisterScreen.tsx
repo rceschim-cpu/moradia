@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.border,
     gap: 14,
   },
-  logo: { width: 280, height: 100, alignSelf: 'center' },
+  logo: { width: 340, height: 110, alignSelf: 'center' },
   partnersBadge: {
     borderWidth: 1,
     borderColor: Colors.border,
