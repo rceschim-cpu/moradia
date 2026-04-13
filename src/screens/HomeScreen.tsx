@@ -25,11 +25,13 @@ export function HomeScreen() {
 
         {/* ── Header ── */}
         <View style={styles.header}>
-          <Image
-            source={require('../../assets/logo-teal.jpg')}
-            style={styles.logo}
-            resizeMode="contain"
-          />
+          <View style={styles.logoWrap}>
+            <Image
+              source={require('../../assets/logo-teal.jpg')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          </View>
         </View>
 
         {/* ── Greeting ── */}
@@ -135,13 +137,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.white,
-    paddingHorizontal: Spacing.xl,
-    paddingTop: 16,
-    paddingBottom: 16,
+    paddingHorizontal: 0,
+    paddingTop: 8,
+    paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  logo: { width: 220, height: 72, borderRadius: 10 },
+  logoWrap: { flex: 1, height: 80, overflow: 'hidden' },
+  logo: { width: '100%', height: '100%' },
   notifBtn: {
     width: 36,
     height: 36,
