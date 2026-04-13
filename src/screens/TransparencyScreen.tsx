@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   bigGrid: { flexDirection: 'row' },
   bigItem: { flex: 1, alignItems: 'center', paddingVertical: 14, paddingHorizontal: 6 },
   bigItemMid: { borderLeftWidth: 1, borderRightWidth: 1, borderColor: Colors.border },
-  bigN: { fontSize: 20, fontWeight: '800', color: Colors.teal, lineHeight: 24 },
+  bigN: { fontSize: 20, fontWeight: '800', color: Colors.green, lineHeight: 24 },
   bigL: { fontSize: 10, color: Colors.text3, marginTop: 5, textAlign: 'center', lineHeight: 14 },
   card: { backgroundColor: Colors.white, borderRadius: Radius.lg, padding: Spacing.xl, marginBottom: Spacing.md, ...Shadow.sm },
   cardHeading: { fontSize: 10, fontWeight: '700', color: Colors.text3, letterSpacing: 0.7, marginBottom: Spacing.md },

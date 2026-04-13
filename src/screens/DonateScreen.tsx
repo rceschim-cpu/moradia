@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   amountGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   amtChip: { width: '31%', backgroundColor: Colors.white, borderWidth: 1.5, borderColor: Colors.border, borderRadius: Radius.sm, paddingVertical: 14, alignItems: 'center', ...Shadow.sm },
   amtSelected: { borderColor: Colors.terra, backgroundColor: Colors.terraBg },
-  amtVal: { fontSize: 16, fontWeight: '800', color: Colors.text },
+  amtVal: { fontSize: 16, fontWeight: '800', color: Colors.green },
   amtPer: { fontSize: 10, color: Colors.text3, marginTop: 2 },
   input: { backgroundColor: Colors.white, borderWidth: 1.5, borderColor: Colors.border, borderRadius: Radius.sm, paddingHorizontal: 16, paddingVertical: 13, fontSize: 14, color: Colors.text, marginBottom: Spacing.sm },
   payRow: { flexDirection: 'row', gap: 8 },

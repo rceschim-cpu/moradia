@@ -200,10 +200,10 @@ const styles = StyleSheet.create({
   campName: { fontSize: 17, fontWeight: '700', color: Colors.text, marginBottom: 2 },
   campSub: { fontSize: 12, color: Colors.text3 },
   campPct: { alignItems: 'flex-end' },
-  campPctN: { fontSize: 36, fontWeight: '800', color: Colors.teal, lineHeight: 40 },
-  campPctSymbol: { fontSize: 14, fontWeight: '600', color: Colors.teal, marginTop: -4 },
+  campPctN: { fontSize: 36, fontWeight: '800', color: Colors.green, lineHeight: 40 },
+  campPctSymbol: { fontSize: 14, fontWeight: '600', color: Colors.green, marginTop: -4 },
   progLabels: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 },
-  raised: { fontSize: 12, fontWeight: '700', color: Colors.teal },
+  raised: { fontSize: 12, fontWeight: '700', color: Colors.green },
   goal: { fontSize: 12, color: Colors.text3 },
 
   statsRow: { flexDirection: 'row', gap: Spacing.sm, marginBottom: Spacing.md },
@@ -216,18 +216,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     ...Shadow.sm,
   },
-  statN: { fontSize: 26, fontWeight: '800', color: Colors.teal, lineHeight: 30 },
+  statN: { fontSize: 26, fontWeight: '800', color: Colors.terra, lineHeight: 30 },
   statL: { fontSize: 10, color: Colors.text3, marginTop: 4, textAlign: 'center', lineHeight: 14 },
 
   actionsRow: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
   actionChip: {
     borderWidth: 1.5,
-    borderColor: Colors.teal,
+    borderColor: Colors.terra,
     borderRadius: Radius.full,
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
-  actionChipText: { fontSize: 13, fontWeight: '600', color: Colors.teal },
+  actionChipText: { fontSize: 13, fontWeight: '600', color: Colors.terra },
 
   newsItem: {
     flexDirection: 'row',

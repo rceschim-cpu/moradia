@@ -48,7 +48,7 @@ export function LoginScreen({ onGoToRegister }: Props) {
           {/* Logo area */}
           <View style={styles.logoArea}>
             <Image source={require('../../assets/logo-teal.jpg')} style={styles.logo} resizeMode="contain" />
-            <Text style={styles.tagline}>Transformando vidas, um lar de cada vez</Text>
+            <Text style={styles.tagline}>De casa em casa podemos mudar o mundo</Text>
           </View>
 
           {/* Form */}

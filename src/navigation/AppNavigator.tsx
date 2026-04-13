@@ -19,6 +19,12 @@ import { Colors } from '../theme';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
+// ── Ícone monochromático genérico ─────────────────────────────
+function TabIcon({ char, color, size = 20 }: { char: string; color: string; size?: number }) {
+  return <Text style={{ fontSize: size, color, lineHeight: size + 4 }}>{char}</Text>;
+}
+
+// ── Botão central de doação ───────────────────────────────────
 function DonateIcon() {
   return (
     <View style={styles.fabWrap}>
@@ -29,32 +35,69 @@ function DonateIcon() {
   );
 }
 
+// ── Hidden tab item (largura zero, sem espaço) ────────────────
+const hiddenTab = {
+  tabBarButton: () => null as any,
+  tabBarItemStyle: { width: 0, overflow: 'hidden' as const, padding: 0 },
+};
+
 function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
         tabBarStyle: styles.tabBar,
-        tabBarActiveTintColor: Colors.teal,
+        tabBarActiveTintColor: Colors.terra,
         tabBarInactiveTintColor: Colors.text3,
         tabBarLabelStyle: styles.tabLabel,
       }}
     >
       {/* ── Abas visíveis ── */}
-      <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarLabel: 'Início' }} />
-      <Tab.Screen name="Campaign" component={CampaignScreen} options={{ tabBarLabel: 'Campanha' }} />
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          tabBarLabel: 'Início',
+          tabBarIcon: ({ color }) => <TabIcon char="⌂" color={color} size={22} />,
+        }}
+      />
+      <Tab.Screen
+        name="Campaign"
+        component={CampaignScreen}
+        options={{
+          tabBarLabel: 'Campanha',
+          tabBarIcon: ({ color }) => <TabIcon char="◎" color={color} size={18} />,
+        }}
+      />
       <Tab.Screen
         name="Donate"
         component={DonateScreen}
-        options={{ tabBarLabel: '', tabBarIcon: () => <DonateIcon /> }}
+        options={{
+          tabBarLabel: '',
+          tabBarIcon: () => <DonateIcon />,
+        }}
       />
-      <Tab.Screen name="News" component={NewsScreen} options={{ tabBarLabel: 'Novidades' }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarLabel: 'Perfil' }} />
+      <Tab.Screen
+        name="News"
+        component={NewsScreen}
+        options={{
+          tabBarLabel: 'Novidades',
+          tabBarIcon: ({ color }) => <TabIcon char="☰" color={color} size={18} />,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarLabel: 'Perfil',
+          tabBarIcon: ({ color }) => <TabIcon char="◉" color={color} size={18} />,
+        }}
+      />
 
-      {/* ── Telas acessíveis por navegação (sem item no tab bar) ── */}
-      <Tab.Screen name="Transparency" component={TransparencyScreen} options={{ tabBarButton: () => null }} />
-      <Tab.Screen name="Events" component={EventsScreen} options={{ tabBarButton: () => null }} />
-      <Tab.Screen name="Contact" component={ContactScreen} options={{ tabBarButton: () => null }} />
+      {/* ── Telas secundárias: menu visível, sem item na barra ── */}
+      <Tab.Screen name="Transparency" component={TransparencyScreen} options={hiddenTab} />
+      <Tab.Screen name="Events" component={EventsScreen} options={hiddenTab} />
+      <Tab.Screen name="Contact" component={ContactScreen} options={hiddenTab} />
     </Tab.Navigator>
   );
 }
@@ -101,7 +144,7 @@ const styles = StyleSheet.create({
     paddingBottom: 18,
     paddingTop: 8,
   },
-  tabLabel: { fontSize: 11, fontWeight: '500', letterSpacing: 0.2 },
+  tabLabel: { fontSize: 11, fontWeight: '600', letterSpacing: 0.2 },
   fabWrap: { alignItems: 'center', justifyContent: 'center', marginTop: -20 },
   fab: {
     width: 52,
