@@ -7,12 +7,12 @@ import { getFirestore } from 'firebase/firestore';
 // Project Settings → General → Your apps → SDK setup & config
 // ─────────────────────────────────────────────────────────────
 const firebaseConfig = {
-  apiKey: 'FIREBASE_API_KEY',
-  authDomain: 'FIREBASE_AUTH_DOMAIN',
-  projectId: 'FIREBASE_PROJECT_ID',
-  storageBucket: 'FIREBASE_STORAGE_BUCKET',
-  messagingSenderId: 'FIREBASE_MESSAGING_SENDER_ID',
-  appId: 'FIREBASE_APP_ID',
+  apiKey: 'AIzaSyAP0RXwEhaY6NwpTN6YCboS_KVgeOpua4w',
+  authDomain: 'moradia-be86e.firebaseapp.com',
+  projectId: 'moradia-be86e',
+  storageBucket: 'moradia-be86e.firebasestorage.app',
+  messagingSenderId: '105112233934',
+  appId: '1:105112233934:web:b15853fbc71314e22cad9f',
 };
 
 // Evita reinicializar em hot-reload
