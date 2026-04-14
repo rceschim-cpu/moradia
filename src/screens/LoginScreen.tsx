@@ -121,8 +121,8 @@ const styles = StyleSheet.create({
   logoArea: {
     backgroundColor: Colors.white,
     alignItems: 'center',
-    paddingTop: 24,
-    paddingBottom: 20,
+    paddingTop: 12,
+    paddingBottom: 10,
     paddingHorizontal: Spacing.xl,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
