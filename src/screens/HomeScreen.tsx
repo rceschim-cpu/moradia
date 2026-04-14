@@ -35,11 +35,6 @@ export function HomeScreen() {
         {/* ── Header ── */}
         <View style={styles.header}>
           <Image
-            source={require('../../assets/icon-teal.jpg')}
-            style={styles.iconLogo}
-            resizeMode="contain"
-          />
-          <Image
             source={require('../../assets/logo-teal.jpg')}
             style={styles.logo}
             resizeMode="contain"
@@ -157,8 +152,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.border,
     gap: 10,
   },
-  iconLogo: { width: 56, height: 56, borderRadius: 12 },
-  logo: { width: 200, height: 64 },
+  logo: { width: 260, height: 80 },
   notifBtn: {
     width: 36,
     height: 36,
