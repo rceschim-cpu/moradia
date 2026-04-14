@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.border,
     gap: 10,
   },
-  logo: { width: 320, height: 100 },
+  logo: { width: '85%', height: 120 },
   notifBtn: {
     width: 36,
     height: 36,
