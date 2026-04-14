@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.border,
   },
   logo: { width: '90%', height: 180 },
-  tagline: { fontSize: 13, color: Colors.text3, marginTop: 12, textAlign: 'center', lineHeight: 20 },
+  tagline: { fontSize: 17, color: Colors.teal, marginTop: 16, textAlign: 'center', lineHeight: 26, fontWeight: '600' },
   form: {
     flex: 1,
     padding: Spacing.xl,
