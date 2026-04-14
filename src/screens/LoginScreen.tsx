@@ -47,7 +47,10 @@ export function LoginScreen({ onGoToRegister }: Props) {
 
           {/* Logo area */}
           <View style={styles.logoArea}>
-            <Image source={require('../../assets/logo-teal.jpg')} style={styles.logo} resizeMode="contain" />
+            <View style={styles.logoRow}>
+              <Image source={require('../../assets/icon-teal.jpg')} style={styles.iconLogo} resizeMode="contain" />
+              <Image source={require('../../assets/logo-teal.jpg')} style={styles.logo} resizeMode="contain" />
+            </View>
             <Text style={styles.tagline}>De casa em casa podemos mudar o mundo</Text>
           </View>
 
@@ -127,7 +130,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  logo: { width: 340, height: 110, alignSelf: 'center' },
+  logoRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12 },
+  iconLogo: { width: 56, height: 56, borderRadius: 12 },
+  logo: { width: 200, height: 64 },
   tagline: { fontSize: 13, color: Colors.text3, marginTop: 12, textAlign: 'center', lineHeight: 20 },
   form: {
     flex: 1,

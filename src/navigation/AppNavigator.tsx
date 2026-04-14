@@ -33,12 +33,6 @@ function DonateTabIcon() {
   );
 }
 
-// Telas ocultas: sem botão E sem largura no tab bar
-const hiddenTabOptions = {
-  tabBarButton: () => <View style={{ width: 0 }} />,
-  tabBarItemStyle: { width: 0, overflow: 'hidden' as const },
-};
-
 function TabNavigator() {
   return (
     <Tab.Navigator
@@ -50,7 +44,6 @@ function TabNavigator() {
         tabBarLabelStyle: styles.tabLabel,
       }}
     >
-      {/* ── 5 abas reais ── */}
       <Tab.Screen
         name="Home"
         component={HomeScreen}
@@ -92,11 +85,6 @@ function TabNavigator() {
           tabBarIcon: ({ color }) => <TabIcon char="◉" color={color} size={18} />,
         }}
       />
-
-      {/* ── Telas secundárias: menu visível, item oculto ── */}
-      <Tab.Screen name="Transparency" component={TransparencyScreen} options={hiddenTabOptions} />
-      <Tab.Screen name="Events" component={EventsScreen} options={hiddenTabOptions} />
-      <Tab.Screen name="Contact" component={ContactScreen} options={hiddenTabOptions} />
     </Tab.Navigator>
   );
 }
@@ -105,6 +93,9 @@ function AppScreens() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Main" component={TabNavigator} />
+      <Stack.Screen name="Transparency" component={TransparencyScreen} />
+      <Stack.Screen name="Events" component={EventsScreen} />
+      <Stack.Screen name="Contact" component={ContactScreen} />
     </Stack.Navigator>
   );
 }

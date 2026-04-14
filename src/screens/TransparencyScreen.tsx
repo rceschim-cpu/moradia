@@ -33,7 +33,7 @@ export function TransparencyScreen() {
             {/* Só a seta é clicável, com área de toque generosa */}
             <TouchableOpacity
               style={styles.backBtn}
-              onPress={() => navigation.jumpTo('Home')}
+              onPress={() => navigation.navigate('Main')}
               hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             >
               <Text style={styles.backArrow}>‹</Text>
