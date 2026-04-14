@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { getCountFromServer, collection } from 'firebase/firestore';
 import { ProgressBar } from '../components/Card';
 import { Colors, Spacing, Radius, Shadow } from '../theme';
 import { currentCampaign, projectStats, newsItems } from '../data/mock';
 import { useAuth } from '../context/AuthContext';
+import { db } from '../services/firebase';
 
 const NEWS_COLORS: Record<string, { text: string }> = {
   obra:  { text: Colors.teal },
@@ -18,6 +20,13 @@ export function HomeScreen() {
   const { profile, user } = useAuth();
   const firstName = (profile?.name ?? user?.displayName ?? 'Parceiro').split(' ')[0];
   const pct = currentCampaign.raised / currentCampaign.goal;
+  const [partnerCount, setPartnerCount] = useState(0);
+
+  useEffect(() => {
+    getCountFromServer(collection(db, 'users'))
+      .then(snap => setPartnerCount(snap.data().count))
+      .catch(() => setPartnerCount(0));
+  }, []);
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -25,6 +34,11 @@ export function HomeScreen() {
 
         {/* ── Header ── */}
         <View style={styles.header}>
+          <Image
+            source={require('../../assets/icon-teal.jpg')}
+            style={styles.iconLogo}
+            resizeMode="contain"
+          />
           <Image
             source={require('../../assets/logo-teal.jpg')}
             style={styles.logo}
@@ -72,8 +86,8 @@ export function HomeScreen() {
           <View style={styles.statsRow}>
             {[
               { n: projectStats.housesDelivered, l: 'Casas\nentregues' },
-              { n: projectStats.activePartners, l: 'Parceiros\nativos' },
-              { n: projectStats.livesImpacted, l: 'Vidas\nimpactadas' },
+              { n: partnerCount,                 l: 'Parceiros\nativos' },
+              { n: projectStats.livesImpacted,   l: 'Vidas\nimpactadas' },
             ].map(s => (
               <View key={s.l} style={styles.statBox}>
                 <Text style={styles.statN}>{s.n}</Text>
@@ -133,16 +147,18 @@ const styles = StyleSheet.create({
   scroll: { backgroundColor: Colors.cream },
 
   header: {
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.white,
-    paddingHorizontal: 0,
-    paddingTop: 0,
-    paddingBottom: 0,
+    paddingHorizontal: Spacing.xl,
+    paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
+    gap: 10,
   },
-  logo: { width: 340, height: 110, alignSelf: 'center' },
+  iconLogo: { width: 56, height: 56, borderRadius: 12 },
+  logo: { width: 200, height: 64 },
   notifBtn: {
     width: 36,
     height: 36,

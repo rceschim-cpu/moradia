@@ -1,25 +1,25 @@
 export const currentCampaign = {
   id: '1',
-  familyName: 'Família Silva',
-  location: 'Ceilândia Norte, DF',
-  members: 4,
+  familyName: 'Adriana e Isabelly',
+  location: 'Curitiba, Paraná',
+  members: 2,
   story:
-    'A família Silva é composta pelo casal Rodrigo e Cristina e seus dois filhos, Lucas (8) e Beatriz (5). Eles vivem em uma casa improvisada de lona e madeira há 6 anos, sem saneamento básico. Rodrigo trabalha como pedreiro autônomo e Cristina cuida das crianças em tempo integral. Com a sua ajuda, podemos transformar a vida deles para sempre. 💛',
-  goal: 12000,
-  raised: 8160,
+    'Adriana tem 28 anos e Isabelly tem 5 anos! As duas moram sozinhas em uma casa de 20 m². Adriana não possui renda fixa e batalha dia a dia para dar o melhor para sua filha. O barraco em que vivem foi construído com ajuda dos vizinhos. Seu maior sonho é mudar essa realidade e viver em uma casa mais estruturada, confortável, segura e digna. Ela tem o sonho de ter uma mesa para convidar a família para os almoços!',
+  goal: 70000,
+  raised: 20000,
   donors: [
     { initials: 'M', name: 'Maria T.' },
     { initials: 'J', name: 'João P.' },
     { initials: 'C', name: 'Carla R.' },
     { initials: 'A', name: 'Ana S.' },
   ],
-  extraDonors: 39,
+  extraDonors: 12,
 };
 
 export const projectStats = {
-  housesDelivered: 47,
-  activePartners: 183,
-  livesImpacted: 214,
+  housesDelivered: 5,
+  activePartners: 0, // carregado dinamicamente do Firebase
+  livesImpacted: 25,
 };
 
 export const newsItems = [
@@ -27,7 +27,7 @@ export const newsItems = [
     id: '1',
     category: 'obra',
     categoryLabel: 'Obra em andamento',
-    title: 'Fundação da casa 48 já está pronta!',
+    title: 'Fundação da casa da Adriana já está pronta!',
     excerpt:
       'As equipes de voluntários trabalharam neste fim de semana e conseguiram concluir toda a fundação. A próxima etapa são as paredes, previstas para o próximo mutirão.',
     date: '12 de abril, 2026',
@@ -61,8 +61,8 @@ export const events = [
     day: '19',
     month: 'ABR',
     color: '#1A7B72',
-    title: 'Mutirão de Construção – Casa 48',
-    detail: '🕗 7h–17h  ·  📍 Ceilândia Norte, DF\nLeve luva, protetor solar e disposição!',
+    title: 'Mutirão de Construção – Casa da Adriana',
+    detail: '7h–17h  ·  Curitiba, PR\nLeve luva, protetor solar e disposição!',
     confirmed: true,
   },
   {
@@ -71,7 +71,7 @@ export const events = [
     month: 'ABR',
     color: '#C4724A',
     title: 'Entrega de Chaves – Família Alves',
-    detail: '🕐 14h–17h  ·  📍 Samambaia, DF\nCelebre este momento inesquecível com eles!',
+    detail: '14h–17h  ·  Curitiba, PR\nCelebre este momento inesquecível com eles!',
     confirmed: false,
   },
   {
@@ -80,7 +80,7 @@ export const events = [
     month: 'MAI',
     color: '#5C3A9C',
     title: 'Jantar dos Parceiros 2026',
-    detail: '🕖 19h30  ·  📍 A confirmar\nCelebração anual com todos os parceiros.',
+    detail: '19h30  ·  Local a confirmar\nCelebração anual com todos os parceiros.',
     confirmed: false,
   },
   {
@@ -89,7 +89,7 @@ export const events = [
     month: 'MAI',
     color: '#1A3A5C',
     title: 'Tour dos Parceiros – Visita às Obras',
-    detail: '🕗 8h–12h  ·  📍 Saída do Plano Piloto\nVeja de perto o que sua doação constrói.',
+    detail: '8h–12h  ·  Curitiba, PR\nVeja de perto o que sua doação constrói.',
     confirmed: false,
   },
 ];
@@ -104,7 +104,7 @@ export const transparencyData = {
   period: 'Abril 2026',
   totalRaised: 'R$ 62k',
   totalInvested: 'R$ 58k',
-  housesCompleted: 47,
+  housesCompleted: 5,
   monthly: [
     { label: 'Janeiro', value: 'R$ 9.200', pct: 0.77 },
     { label: 'Fevereiro', value: 'R$ 8.450', pct: 0.70 },
