@@ -99,6 +99,8 @@ export function HomeScreen() {
                 { label: 'Transparência', screen: 'Transparency', icon: '▦' },
                 { label: 'Eventos',       screen: 'Events',       icon: '◻' },
                 { label: 'Contato',       screen: 'Contact',      icon: '◈' },
+                { label: 'Relatório',     screen: 'Report',       icon: '◧' },
+                { label: 'Lembretes',     screen: 'Reminders',    icon: '◷' },
               ].map(a => (
                 <TouchableOpacity key={a.screen} style={styles.actionChip} onPress={() => navigation.navigate(a.screen)} activeOpacity={0.7}>
                   <Text style={styles.actionChipIcon}>{a.icon}</Text>

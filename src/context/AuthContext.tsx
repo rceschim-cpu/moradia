@@ -26,6 +26,9 @@ interface UserProfile {
   name: string;
   email: string;
   whatsapp?: string;
+  birthday?: string;        // "DD/MM"
+  donationDay?: number;     // 1-28
+  lastDonationMonth?: string; // "YYYY-MM"
   partnerSince: string;
   totalDonated: number;
   housesHelped: number;

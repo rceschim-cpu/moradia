@@ -5,32 +5,64 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { doc, updateDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { CTAButton } from '../components/CTAButton';
 import { Colors, Spacing, Radius, Shadow } from '../theme';
+import { useAuth } from '../context/AuthContext';
+import { db } from '../services/firebase';
 
 const AMOUNTS = [20, 50, 100, 150, 200, 0];
+const DONATION_DAYS = [1, 5, 10, 15, 20, 25];
 
 export function DonateScreen() {
   const navigation = useNavigation<any>();
+  const { user, profile } = useAuth();
+
   const [selectedAmount, setSelectedAmount] = useState(50);
   const [recurrent, setRecurrent] = useState(true);
   const [payment, setPayment] = useState<'pix' | 'card' | 'boleto'>('pix');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
+  const [donationDay, setDonationDay] = useState(profile?.donationDay ?? 1);
+  const [name, setName] = useState(profile?.name ?? '');
+  const [email, setEmail] = useState(user?.email ?? '');
+  const [whatsapp, setWhatsapp] = useState(profile?.whatsapp ?? '');
+  const [loading, setLoading] = useState(false);
 
-  function handleConfirm() {
+  async function handleConfirm() {
     if (!name || !email) { Alert.alert('Atenção', 'Preencha seu nome e e-mail.'); return; }
-    Alert.alert(
-      'Doação confirmada!',
-      `Sua doação de R$${selectedAmount}${recurrent ? '/mês' : ''} foi registrada.\nObrigada por fazer parte dessa história.`,
-      [{ text: 'Ótimo!', style: 'default' }],
-    );
+    setLoading(true);
+    try {
+      if (user) {
+        const currentMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+        // Atualiza perfil do parceiro
+        await updateDoc(doc(db, 'users', user.uid), {
+          lastDonationMonth: currentMonth,
+          ...(recurrent && { donationDay }),
+        });
+        // Registra a doação
+        await addDoc(collection(db, 'users', user.uid, 'donations'), {
+          amount: selectedAmount,
+          method: payment,
+          recurrent,
+          donationDay: recurrent ? donationDay : null,
+          month: currentMonth,
+          date: serverTimestamp(),
+        });
+      }
+      Alert.alert(
+        'Doação confirmada!',
+        `Sua doação de R$${selectedAmount}${recurrent ? '/mês' : ''} foi registrada${recurrent ? ` para todo dia ${donationDay}` : ''}.\n\nObrigada por fazer parte dessa história! 💚`,
+        [{ text: 'Ótimo!', style: 'default' }],
+      );
+    } catch {
+      Alert.alert('Erro', 'Não foi possível registrar a doação.');
+    } finally {
+      setLoading(false);
+    }
   }
 
   const payOpts = [
-    { key: 'pix', label: 'Pix' },
-    { key: 'card', label: 'Cartão' },
+    { key: 'pix',    label: 'Pix' },
+    { key: 'card',   label: 'Cartão' },
     { key: 'boleto', label: 'Boleto' },
   ] as const;
 
@@ -65,6 +97,30 @@ export function DonateScreen() {
               <Text style={[styles.toggleText, !recurrent && styles.toggleTextActive]}>Única</Text>
             </TouchableOpacity>
           </View>
+
+          {/* Dia preferido — somente para recorrente */}
+          {recurrent && (
+            <>
+              <Text style={styles.sectionLabel}>Dia preferido para cobrança</Text>
+              <View style={styles.dayRow}>
+                {DONATION_DAYS.map(day => (
+                  <TouchableOpacity
+                    key={day}
+                    style={[styles.dayChip, donationDay === day && styles.daySelected]}
+                    onPress={() => setDonationDay(day)}
+                    activeOpacity={0.8}
+                  >
+                    <Text style={[styles.dayN, donationDay === day && styles.dayNSelected]}>
+                      {day}
+                    </Text>
+                    <Text style={[styles.dayLabel, donationDay === day && styles.dayLabelSelected]}>
+                      todo mês
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </>
+          )}
 
           {/* Valor */}
           <Text style={styles.sectionLabel}>Valor</Text>
@@ -105,11 +161,24 @@ export function DonateScreen() {
             ))}
           </View>
 
+          {/* Resumo */}
+          {recurrent && (
+            <View style={styles.summaryBox}>
+              <Text style={styles.summaryText}>
+                Cobrança de{' '}
+                <Text style={styles.summaryBold}>R${selectedAmount || '?'}/mês</Text>
+                {' '}todo dia{' '}
+                <Text style={styles.summaryBold}>{donationDay}</Text>
+              </Text>
+            </View>
+          )}
+
           <View style={{ height: Spacing.lg }} />
           <CTAButton
             label={`Confirmar doação · R$${selectedAmount || '?'}${recurrent ? '/mês' : ''}`}
             variant="terra"
             onPress={handleConfirm}
+            disabled={loading}
           />
           <Text style={styles.lgpd}>Dados protegidos pela LGPD · Cancele quando quiser</Text>
           <View style={{ height: 24 }} />
@@ -141,6 +210,22 @@ const styles = StyleSheet.create({
   toggleActive: { backgroundColor: Colors.teal },
   toggleText: { fontSize: 13, fontWeight: '500', color: Colors.text3 },
   toggleTextActive: { color: Colors.white, fontWeight: '700' },
+  dayRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  dayChip: {
+    width: '30%',
+    backgroundColor: Colors.white,
+    borderWidth: 1.5,
+    borderColor: Colors.border,
+    borderRadius: Radius.sm,
+    paddingVertical: 10,
+    alignItems: 'center',
+    ...Shadow.sm,
+  },
+  daySelected: { borderColor: Colors.green, backgroundColor: Colors.greenBg },
+  dayN: { fontSize: 18, fontWeight: '800', color: Colors.text2 },
+  dayNSelected: { color: Colors.green },
+  dayLabel: { fontSize: 9, color: Colors.text3, marginTop: 2 },
+  dayLabelSelected: { color: Colors.green },
   amountGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   amtChip: { width: '31%', backgroundColor: Colors.white, borderWidth: 1.5, borderColor: Colors.border, borderRadius: Radius.sm, paddingVertical: 14, alignItems: 'center', ...Shadow.sm },
   amtSelected: { borderColor: Colors.terra, backgroundColor: Colors.terraBg },
@@ -151,5 +236,8 @@ const styles = StyleSheet.create({
   payOpt: { flex: 1, backgroundColor: Colors.white, borderWidth: 1.5, borderColor: Colors.border, borderRadius: Radius.sm, paddingVertical: 14, alignItems: 'center', ...Shadow.sm },
   paySelected: { borderColor: Colors.teal, backgroundColor: Colors.tealBg },
   payLabel: { fontSize: 13, fontWeight: '500', color: Colors.text2 },
+  summaryBox: { backgroundColor: Colors.greenBg, borderRadius: Radius.sm, padding: Spacing.md, marginTop: Spacing.lg, alignItems: 'center' },
+  summaryText: { fontSize: 14, color: Colors.green },
+  summaryBold: { fontWeight: '800' },
   lgpd: { fontSize: 11, color: Colors.text3, textAlign: 'center', marginTop: Spacing.md, lineHeight: 18 },
 });

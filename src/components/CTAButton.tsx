@@ -8,12 +8,13 @@ interface CTAButtonProps {
   onPress: () => void;
   variant?: 'terra' | 'teal' | 'outline';
   style?: ViewStyle;
+  disabled?: boolean;
 }
 
-export function CTAButton({ label, onPress, variant = 'teal', style }: CTAButtonProps) {
+export function CTAButton({ label, onPress, variant = 'teal', style, disabled }: CTAButtonProps) {
   if (variant === 'outline') {
     return (
-      <TouchableOpacity style={[styles.outline, style]} onPress={onPress} activeOpacity={0.8}>
+      <TouchableOpacity style={[styles.outline, style, disabled && { opacity: 0.5 }]} onPress={onPress} disabled={disabled} activeOpacity={0.8}>
         <Text style={styles.outlineText}>{label}</Text>
       </TouchableOpacity>
     );
@@ -25,7 +26,7 @@ export function CTAButton({ label, onPress, variant = 'teal', style }: CTAButton
       : [Colors.tealDark, Colors.teal, Colors.tealLight];
 
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.85} style={style}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.85} style={[style, disabled && { opacity: 0.5 }]} disabled={disabled}>
       <LinearGradient
         colors={colors}
         start={{ x: 0, y: 0 }}

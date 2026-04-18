@@ -12,6 +12,8 @@ import { ProfileScreen } from '../screens/ProfileScreen';
 import { TransparencyScreen } from '../screens/TransparencyScreen';
 import { EventsScreen } from '../screens/EventsScreen';
 import { ContactScreen } from '../screens/ContactScreen';
+import { ReportScreen } from '../screens/ReportScreen';
+import { RemindersScreen } from '../screens/RemindersScreen';
 import { AuthNavigator } from './AuthNavigator';
 import { useAuth } from '../context/AuthContext';
 import { Colors } from '../theme';
@@ -96,6 +98,8 @@ function AppScreens() {
       <Stack.Screen name="Transparency" component={TransparencyScreen} />
       <Stack.Screen name="Events" component={EventsScreen} />
       <Stack.Screen name="Contact" component={ContactScreen} />
+      <Stack.Screen name="Report" component={ReportScreen} />
+      <Stack.Screen name="Reminders" component={RemindersScreen} />
     </Stack.Navigator>
   );
 }

@@ -21,6 +21,7 @@ export function ProfileScreen() {
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState(displayName);
   const [editWhatsapp, setEditWhatsapp] = useState(profile?.whatsapp ?? '');
+  const [editBirthday, setEditBirthday] = useState(profile?.birthday ?? '');
   const [saving, setSaving] = useState(false);
 
   async function handleSave() {
@@ -32,6 +33,7 @@ export function ProfileScreen() {
         await updateDoc(doc(db, 'users', auth.currentUser.uid), {
           name: editName.trim(),
           whatsapp: editWhatsapp.trim(),
+          birthday: editBirthday.trim(),
         });
       }
       setEditing(false);
@@ -126,7 +128,7 @@ export function ProfileScreen() {
             <View style={styles.cardTitleRow}>
               <Text style={styles.cardHeading}>MEUS DADOS</Text>
               {!editing && (
-                <TouchableOpacity onPress={() => { setEditName(displayName); setEditWhatsapp(profile?.whatsapp ?? ''); setEditing(true); }}>
+                <TouchableOpacity onPress={() => { setEditName(displayName); setEditWhatsapp(profile?.whatsapp ?? ''); setEditBirthday(profile?.birthday ?? ''); setEditing(true); }}>
                   <Text style={styles.editBtn}>Editar</Text>
                 </TouchableOpacity>
               )}
@@ -152,6 +154,16 @@ export function ProfileScreen() {
                   placeholder="(61) 99999-9999"
                   placeholderTextColor={Colors.text3}
                 />
+                <Text style={styles.fieldLabel}>ANIVERSÁRIO</Text>
+                <TextInput
+                  style={styles.input}
+                  value={editBirthday}
+                  onChangeText={setEditBirthday}
+                  keyboardType="numeric"
+                  placeholder="DD/MM"
+                  placeholderTextColor={Colors.text3}
+                  maxLength={5}
+                />
                 <Text style={styles.emailNote}>E-mail não pode ser alterado aqui.</Text>
                 <View style={styles.editBtnsRow}>
                   <TouchableOpacity style={styles.cancelBtn} onPress={() => setEditing(false)}>
@@ -172,9 +184,13 @@ export function ProfileScreen() {
                   <Text style={styles.dataLabel}>E-mail</Text>
                   <Text style={styles.dataValue}>{user?.email}</Text>
                 </View>
-                <View style={[styles.dataRow, { borderBottomWidth: 0 }]}>
+                <View style={styles.dataRow}>
                   <Text style={styles.dataLabel}>WhatsApp</Text>
                   <Text style={styles.dataValue}>{profile?.whatsapp || '—'}</Text>
+                </View>
+                <View style={[styles.dataRow, { borderBottomWidth: 0 }]}>
+                  <Text style={styles.dataLabel}>Aniversário</Text>
+                  <Text style={styles.dataValue}>{profile?.birthday || '—'}</Text>
                 </View>
               </>
             )}
